@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Nível: jogos com perguntas</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- SDKs do Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root{
   box-sizing:border-box;
@@ -418,78 +421,60 @@ const levelBadge = k => `<span class="badge b-${LEVELS[k] ? k : 'medio'}">${lv(k
    Local: localStorage do navegador (demonstração, uma máquina só).
    Para trocar por um back-end de verdade, basta reescrever este objeto.
    ===================================================================== */
+/* =====================================================================
+   Camada de dados conectada ao Firebase Firestore
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDa4PpxnhV_FOVPD0NH19RNhOeTLhHh3rk",
+  authDomain: "nivel-quiz-e4b31.firebaseapp.com",
+  projectId: "nivel-quiz-e4b31",
+  storageBucket: "nivel-quiz-e4b31.firebasestorage.app",
+  messagingSenderId: "865709507708",
+  appId: "1:865709507708:web:7cf87e3e6f024cc2aef5f9"
+};
+
+// Inicializa o Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const firestoreDb = firebase.firestore();
+
 const Store = (() => {
-  let db = null, mode = 'local';
-  const LK = 'nivel-local-db';
-  const queues = new Map();
-  const seq = (p, fn) => {
-    const prev = queues.get(p) || Promise.resolve();
-    const next = prev.catch(() => {}).then(fn);
-    queues.set(p, next);
-    next.catch(() => {}).then(() => { if (queues.get(p) === next) queues.delete(p); });
-    return next;
-  };
-  const retry = async fn => {
-    try { return await fn(); }
-    catch (e) { if (e && e.code === 'unavailable') { await sleep(400 + rand(400)); return fn(); } throw e; }
-  };
-  const lsubs = new Set();
-  const lnotify = () => lsubs.forEach(f => f());
-  const lread = () => { try { return JSON.parse(lsGet(LK) || '{}'); } catch (e) { return {}; } };
-  const lwrite = o => { lsSet(LK, JSON.stringify(o)); lnotify(); };
-  window.addEventListener('storage', e => { if (e.key === LK) lnotify(); });
-  const merge = (a, b) => {
-    const o = clone(a);
-    for (const k in b) {
-      const bv = b[k];
-      if (bv && typeof bv === 'object' && !Array.isArray(bv) && o[k] && typeof o[k] === 'object' && !Array.isArray(o[k])) o[k] = merge(o[k], bv);
-      else o[k] = clone(bv);
-    }
-    return o;
-  };
-  const lcol = (o, c) => Object.keys(o).filter(k => k.startsWith(c + '/') && !k.slice(c.length + 1).includes('/')).sort()
-    .map(k => ({ id: k.slice(c.length + 1), data: clone(o[k]) }));
-  const lwatch = (read, cb) => {
-    let last; const run = () => { const v = read(); const s = JSON.stringify(v); if (s !== last) { last = s; cb(v); } };
-    lsubs.add(run); setTimeout(run, 0); return () => lsubs.delete(run);
-  };
+  const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
+
   return {
-    get mode() { return mode; },
+    get mode() { return 'cloud'; },
     async init() {
-      try { if (window.claude && window.claude.use) db = await window.claude.use('db'); } catch (e) { db = null; }
-      mode = db ? 'cloud' : 'local'; return mode;
+      return 'cloud';
     },
-    async get(p) {
-      if (db) { const s = await retry(() => db.doc(p).get()); return s.exists ? clone(s.data()) : null; }
-      const v = lread()[p]; return v === undefined ? null : clone(v);
+    async get(path) {
+      const doc = await firestoreDb.doc(path).get();
+      return doc.exists ? clone(doc.data()) : null;
     },
-    set(p, d) {
-      return seq(p, () => db ? retry(() => db.doc(p).set(clone(d))) : Promise.resolve(lwrite({ ...lread(), [p]: clone(d) })));
+    async set(path, data) {
+      await firestoreDb.doc(path).set(clone(data));
     },
-    update(p, d) {
-      return seq(p, () => {
-        if (db) return retry(() => db.doc(p).update(clone(d)));
-        const o = lread(); if (o[p] === undefined) return Promise.reject({ code: 'invalid_argument' });
-        o[p] = merge(o[p], d); lwrite(o); return Promise.resolve();
-      });
+    async update(path, data) {
+      await firestoreDb.doc(path).update(clone(data));
     },
-    del(p) {
-      return seq(p, () => {
-        if (db) return retry(() => db.doc(p).delete());
-        const o = lread(); delete o[p]; lwrite(o); return Promise.resolve();
-      });
+    async del(path) {
+      await firestoreDb.doc(path).delete();
     },
-    async list(c) {
-      if (db) { const s = await retry(() => db.collection(c).get()); return s.docs.map(x => ({ id: x.id, data: clone(x.data()) })); }
-      return lcol(lread(), c);
+    async list(collectionName) {
+      const snap = await firestoreDb.collection(collectionName).get();
+      return snap.docs.map(doc => ({ id: doc.id, data: clone(doc.data()) }));
     },
-    watchDoc(p, cb) {
-      if (db) return db.doc(p).onSnapshot(s => cb(s.exists ? clone(s.data()) : null), e => console.warn('watchDoc', p, e));
-      return lwatch(() => { const v = lread()[p]; return v === undefined ? null : v; }, cb);
+    watchDoc(path, callback) {
+      return firestoreDb.doc(path).onSnapshot(
+        doc => callback(doc.exists ? clone(doc.data()) : null),
+        err => console.warn('watchDoc erro:', path, err)
+      );
     },
-    watchCol(c, cb) {
-      if (db) return db.collection(c).onSnapshot(s => cb(s.docs.map(x => ({ id: x.id, data: clone(x.data()) }))), e => console.warn('watchCol', c, e));
-      return lwatch(() => lcol(lread(), c), cb);
+    watchCol(collectionName, callback) {
+      return firestoreDb.collection(collectionName).onSnapshot(
+        snap => callback(snap.docs.map(doc => ({ id: doc.id, data: clone(doc.data()) }))),
+        err => console.warn('watchCol erro:', collectionName, err)
+      );
     }
   };
 })();

@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nível: jogos com perguntas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F2F0FF; --surface:#FFFFFF; --ink:#16163F; --muted:#565685; --line:#CFCBF2;
+  --edge:#16163F; --accent:#3D3BFF; --accent-ink:#FFFFFF;
+  --yellow:#FFD23F; --mint:#5EEAC0; --coral:#FF8FA0; --lav:#B9B6FF; --sky:#7FD1FF;
+  --ok:#0B7F58; --bad:#D42A40; --tile-ink:#16163F;
+  --disp:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F0F2B; --surface:#1A1A48; --ink:#F1F0FF; --muted:#AAA8DA; --line:#34346E;
+    --edge:#050516; --accent:#8583FF; --accent-ink:#0F0F2B; --ok:#3DDC9A; --bad:#FF7A8B;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F0F2B; --surface:#1A1A48; --ink:#F1F0FF; --muted:#AAA8DA; --line:#34346E;
+  --edge:#050516; --accent:#8583FF; --accent-ink:#0F0F2B; --ok:#3DDC9A; --bad:#FF7A8B;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.5 var(--body);-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--disp);margin:0;line-height:1.1}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+
+/* topo */
+.top{border-bottom:2.5px solid var(--edge);background:var(--surface)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:.8rem 1.2rem;padding-top:.8rem;padding-bottom:.8rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.6rem;background:none;border:0;cursor:pointer;font:800 1.6rem var(--disp);padding:0;color:var(--ink)}
+.mark{width:1.5rem;height:1.5rem;background:var(--yellow);border:2.5px solid var(--edge);border-radius:6px 14px 6px 14px;display:inline-block}
+nav{display:flex;gap:.4rem;flex-wrap:wrap;flex:1 1 auto}
+.tab{background:none;border:2.5px solid transparent;border-radius:99px;padding:.4rem .9rem;font-weight:600;cursor:pointer}
+.tab[aria-current="page"]{background:var(--accent);color:var(--accent-ink);border-color:var(--edge)}
+.who{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+#who-name{font-weight:700}
+.badge{display:inline-block;font-weight:700;font-size:.8rem;padding:.05rem .6rem;border:2px solid var(--edge);border-radius:99px;color:#16163F;background:var(--lav);white-space:nowrap}
+.b-facil{background:var(--mint)}.b-medio{background:var(--yellow)}.b-dificil{background:var(--coral)}.b-student{background:var(--sky)}.b-teacher{background:var(--lav)}
+
+/* botões */
+.btn{border:2.5px solid var(--edge);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:600;padding:.6rem 1rem;cursor:pointer;box-shadow:3px 3px 0 var(--edge);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--edge)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-danger{background:var(--coral);color:#16163F}
+.btn-sm{padding:.3rem .7rem;font-size:.9rem;box-shadow:2px 2px 0 var(--edge)}
+.row{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center}
+
+/* login */
+.login{display:grid;grid-template-columns:1.2fr 1fr;gap:2.5rem;align-items:center;padding:3rem 0}
+.lead{font-size:1.15rem;max-width:44ch;color:var(--muted);margin:1rem 0 1.5rem}
+.login-card h2{font-size:1.6rem;margin-bottom:.6rem}
+.login-card p{color:var(--muted);margin:0 0 1rem}
+.login-card form{display:grid;gap:.9rem}
+.login-card{box-shadow:6px 6px 0 var(--edge)}
+.boot{padding:5rem 0;text-align:center;color:var(--muted);font-weight:600}
+
+/* home */
+.hero{display:grid;grid-template-columns:1.3fr .8fr;gap:2.5rem;align-items:center;padding:3rem 0 2rem}
+h1{font-weight:800;font-size:clamp(2.4rem,7vw,4.4rem);letter-spacing:-.025em}
+.pick{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.pick label{font-weight:700}
+.pick select{padding:.6rem .8rem;border:2.5px solid var(--edge);border-radius:12px;background:var(--surface);min-width:12rem;max-width:100%}
+.bank-info{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:.8rem;color:var(--muted);font-size:.95rem}
+.sample{background:var(--yellow);color:#16163F;border:2.5px solid var(--edge);border-radius:20px;padding:1.2rem;box-shadow:6px 6px 0 var(--edge);transform:rotate(-2.5deg)}
+.sample-tag{display:inline-block;background:#16163F;color:#fff;font-weight:700;font-size:.85rem;padding:.15rem .6rem;border-radius:99px}
+.sample p{font:800 1.5rem var(--disp);margin:.7rem 0}
+.s-opt{background:#fff;border:2.5px solid #16163F;border-radius:10px;padding:.5rem .7rem;margin-top:.5rem;font-weight:600;font-size:.95rem}
+.s-opt.hit{background:var(--mint)}
+.sec{font-size:1.5rem;margin:2rem 0 1rem}
+.live{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem}
+.tile{display:flex;flex-direction:column;gap:.55rem;text-align:left;padding:1.3rem;min-height:230px;background:var(--c);color:var(--tile-ink);border:2.5px solid var(--edge);border-radius:20px;box-shadow:6px 6px 0 var(--edge);cursor:pointer;transition:transform .1s,box-shadow .1s}
+.tile:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--edge)}
+.tile:active{transform:translate(4px,4px);box-shadow:2px 2px 0 var(--edge)}
+.tile-emoji{font-size:3.4rem;line-height:1}
+.tile-name{font:800 1.7rem/1.1 var(--disp)}
+.tile-desc{max-width:36ch}
+.tile-best{margin-top:auto;align-self:flex-start;font-weight:700;font-size:.9rem;background:rgba(255,255,255,.6);padding:.2rem .7rem;border:2px solid #16163F;border-radius:99px}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:2rem;padding:1.3rem 1.5rem;background:var(--accent);color:var(--accent-ink);border:2.5px solid var(--edge);border-radius:20px;box-shadow:6px 6px 0 var(--edge)}
+.cta h2{font-size:1.6rem}
+.cta p{margin:.2rem 0 0;max-width:50ch}
+.cta .btn{color:#16163F;background:var(--yellow)}
+.soon{display:flex;flex-wrap:wrap;gap:.7rem;padding-bottom:3rem}
+.chip{display:flex;gap:.5rem;align-items:center;padding:.5rem .9rem;border:2.5px dashed var(--muted);border-radius:99px;color:var(--muted);font-weight:600}
+
+/* jogo */
+.hud{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:1.2rem 0}
+.hud-title{font:800 1.5rem var(--disp);flex:1 1 auto}
+.hud-stats{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;font-weight:600}
+#hud-lives{color:var(--bad);font-size:1.25rem;letter-spacing:.1em}
+#hud-score{font:800 1.4rem var(--disp)}
+.stage{position:relative;min-height:470px;background:var(--surface);border:2.5px solid var(--edge);border-radius:20px;box-shadow:6px 6px 0 var(--edge);overflow:hidden;margin-bottom:3rem}
+.end{position:absolute;inset:0;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.7rem;padding:1.5rem;z-index:5}
+.end h2{font-size:2.2rem}
+.end-score{font:800 4rem/1 var(--disp);margin:.2rem 0}
+.end-score small{font-size:1.1rem;font-weight:600}
+
+/* pergunta */
+.modal{position:fixed;inset:0;background:rgba(10,10,40,.62);display:grid;place-items:center;padding:1rem;z-index:50}
+.q-card{width:min(640px,100%);background:var(--surface);border:2.5px solid var(--edge);border-radius:20px;box-shadow:6px 6px 0 var(--edge);padding:1.3rem;max-height:calc(100% - 1rem);overflow:auto}
+.q-card.inline{border:0;box-shadow:none;border-radius:0;margin:0 auto;padding:1.5rem 1.3rem}
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.6rem}
+.q-tag{background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:.9rem;padding:.15rem .7rem;border-radius:99px}
+.q-time{font-weight:700;font-variant-numeric:tabular-nums}
+.q-bar{height:10px;border:2px solid var(--edge);border-radius:99px;overflow:hidden;background:var(--bg)}
+.q-bar i{display:block;height:100%;width:100%;background:var(--accent)}
+.q-bar i.low{background:var(--bad)}
+.q-text{font-size:1.6rem;margin:1.1rem 0}
+.q-opts{display:grid;gap:.6rem}
+.q-opt{display:flex;gap:.8rem;align-items:center;text-align:left;width:100%;padding:.7rem .8rem;border:2.5px solid var(--edge);border-radius:12px;background:var(--bg);font-weight:600;cursor:pointer}
+.q-opt b{flex:none;width:2rem;height:2rem;display:grid;place-items:center;border-radius:8px;background:var(--yellow);color:#16163F;border:2px solid var(--edge)}
+.q-opt:not(:disabled):hover{background:var(--line)}
+.q-opt:disabled{cursor:default}
+.q-opt.is-right{background:var(--mint);color:#16163F}
+.q-opt.is-wrong{background:var(--coral);color:#16163F}
+.q-feedback{margin-top:1rem;display:flex;flex-direction:column;gap:.7rem;align-items:flex-start}
+.q-feedback p{margin:0}
+.q-feedback .ok strong{color:var(--ok)}
+.q-feedback .bad strong{color:var(--bad)}
+
+/* memória */
+.mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;padding:1.2rem;max-width:520px;margin:0 auto}
+.mem-card{aspect-ratio:1;display:grid;place-items:center;padding:0;border:2.5px solid var(--edge);border-radius:14px;background:var(--accent);color:var(--accent-ink);font:800 1.8rem var(--disp);cursor:pointer;box-shadow:3px 3px 0 var(--edge)}
+.mem-card .front{display:none;font-size:clamp(1.8rem,8vw,2.8rem)}
+.mem-card.open{background:var(--yellow);color:#16163F}
+.mem-card.open .front{display:block}
+.mem-card.open .back{display:none}
+.mem-card.done{background:var(--mint);color:#16163F;cursor:default}
+
+/* cobrinha */
+.snake-cv{display:block;width:min(100%,440px);height:auto;aspect-ratio:1;margin:1.2rem auto;border:2.5px solid var(--edge);border-radius:12px;touch-action:none;background:#16163F}
+.dpad{display:grid;grid-template-columns:repeat(3,3.4rem);grid-template-areas:". up ." "left . right" ". down .";gap:.4rem;justify-content:center;margin:0 0 1.2rem}
+.dpad button{height:3.4rem;border:2.5px solid var(--edge);border-radius:12px;background:var(--lav);color:#16163F;font-size:1.2rem;cursor:pointer}
+.dpad [data-d=up]{grid-area:up}.dpad [data-d=left]{grid-area:left}.dpad [data-d=right]{grid-area:right}.dpad [data-d=down]{grid-area:down}
+@media (pointer:fine){.dpad{display:none}}
+
+/* balões */
+.sky{position:absolute;inset:0;background:linear-gradient(#8FDCFF,#E9F9FF);overflow:hidden;touch-action:manipulation}
+.balloon{position:absolute;top:0;width:58px;height:72px;padding:0;border:2.5px solid #16163F;border-radius:50% 50% 50% 50%/58% 58% 42% 42%;cursor:pointer;color:#fff;font-weight:800;font-size:1.3rem;will-change:transform}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:26px;background:#16163F}
+.balloon.pop{animation:pop .18s forwards;pointer-events:none}
+@keyframes pop{to{opacity:0;scale:1.5}}
+.float{position:absolute;font:800 1.2rem var(--disp);color:#16163F;pointer-events:none;animation:up .8s forwards}
+@keyframes up{to{opacity:0;translate:0 -40px}}
+
+/* painéis (professor / usuários) */
+.t-layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:1.6rem;padding:2rem 0 3rem}
+.panel{background:var(--surface);border:2.5px solid var(--edge);border-radius:16px;padding:1.1rem}
+.t-side h2{font-size:1.3rem;margin-bottom:.8rem}
+#bank-list{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.5rem}
+.bank-btn{width:100%;text-align:left;display:flex;flex-direction:column;gap:.15rem;padding:.6rem .8rem;border:2.5px solid var(--edge);border-radius:12px;background:var(--bg);cursor:pointer;font-weight:700}
+.bank-btn small{font-weight:500;color:var(--muted)}
+.bank-btn .meta{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.bank-btn[aria-current="true"]{background:var(--yellow);color:#16163F}
+.bank-btn[aria-current="true"] small{color:#16163F}
+.note{font-size:.9rem;color:var(--muted);margin:1rem 0 0}
+.ed-head{display:grid;gap:1rem;margin-bottom:1.4rem}
+.fld{display:flex;flex-direction:column;gap:.3rem;font-weight:700;min-width:0}
+.inp{width:100%;padding:.6rem .75rem;border:2px solid var(--edge);border-radius:10px;background:var(--bg);font-weight:500}
+textarea.inp{resize:vertical;min-height:4.5rem}
+.seg{display:flex;gap:.5rem;flex-wrap:wrap;border:0;padding:0;margin:0}
+.seg legend{font-weight:700;margin-bottom:.4rem;padding:0}
+.seg-i{position:relative;cursor:pointer}
+.seg-i input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg-i span{display:block;padding:.45rem .9rem;border:2.5px solid var(--edge);border-radius:99px;background:var(--bg);font-weight:700}
+.seg-i small{font-weight:500;margin-left:.3rem}
+.seg-i input:checked+span{color:#16163F}
+.seg-i input[value="facil"]:checked+span{background:var(--mint)}
+.seg-i input[value="medio"]:checked+span{background:var(--yellow)}
+.seg-i input[value="dificil"]:checked+span{background:var(--coral)}
+.seg-i input:focus-visible+span{outline:3px solid var(--accent);outline-offset:3px}
+.seg-i input:disabled+span{opacity:.7;cursor:default}
+.t-h{font-size:1.35rem;margin:1.6rem 0 .8rem}
+.qlist{list-style:none;padding:0;margin:0;display:grid;gap:.8rem}
+.qi{border:2.5px solid var(--edge);border-left-width:10px;border-left-color:var(--accent);border-radius:12px;padding:.8rem 1rem;background:var(--surface)}
+.qi-text{font-weight:700;margin-bottom:.4rem}
+.qi-opts{list-style:none;padding:0;margin:0 0 .6rem;display:grid;gap:.15rem;font-size:.95rem;color:var(--muted)}
+.qi-opts .right{color:var(--ok);font-weight:700}
+.qi-expl{font-size:.9rem;font-style:italic;color:var(--muted);margin:0 0 .6rem}
+.optrow{display:flex;gap:.6rem;align-items:center;margin-bottom:.5rem}
+.optrow label.rad{display:flex;align-items:center;gap:.3rem;font-size:.85rem;font-weight:600;white-space:nowrap}
+.optrow input[type=radio]{width:1.2rem;height:1.2rem;accent-color:var(--accent)}
+.err{color:var(--bad);font-weight:600;min-height:1.4rem;margin:.4rem 0}
+.empty{text-align:center;padding:2.5rem 1rem}
+.empty p{color:var(--muted)}
+.json-box{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;min-height:9rem}
+.grid-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0 1.2rem}
+.readonly-note{background:var(--yellow);color:#16163F;border:2.5px solid var(--edge);border-radius:12px;padding:.6rem .9rem;margin-bottom:1rem;font-weight:600}
+
+/* usuários */
+.u-wrap{display:grid;gap:1.4rem;padding:2rem 0 3rem}
+.u-wrap h2{font-size:1.35rem;margin-bottom:.8rem}
+.u-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;align-items:end}
+.scroll{overflow-x:auto}
+.utable{width:100%;border-collapse:collapse;min-width:520px}
+.utable th,.utable td{text-align:left;padding:.55rem .6rem;border-bottom:2px solid var(--line);vertical-align:middle}
+.utable th{font-size:.9rem;color:var(--muted)}
+.creds{background:var(--mint);color:#16163F;border:2.5px solid var(--edge);border-radius:16px;padding:1.1rem;box-shadow:5px 5px 0 var(--edge)}
+.creds table{width:100%;border-collapse:collapse;margin:.6rem 0;background:#fff;border-radius:8px}
+.creds td,.creds th{text-align:left;padding:.35rem .6rem;border-bottom:1px solid #C9C9E8;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92rem}
+
+/* sala ao vivo */
+.live-wrap{padding:1.5rem 0 3rem}
+.live-stage{background:var(--surface);border:2.5px solid var(--edge);border-radius:20px;box-shadow:6px 6px 0 var(--edge);padding:1.5rem}
+.live-hero{text-align:center;padding:1rem 0}
+.room-code{font:800 clamp(3rem,13vw,7.5rem)/1 var(--disp);letter-spacing:.08em;margin:.4rem 0 .8rem}
+.pl-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:1.2rem 0;min-height:2.5rem}
+.pl-chip{background:var(--lav);color:#16163F;border:2.5px solid var(--edge);border-radius:99px;padding:.2rem .8rem;font-weight:700}
+.live-q{font:800 clamp(1.5rem,4vw,2.6rem)/1.15 var(--disp);margin:1.1rem 0 1.4rem}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.opt-blk{display:flex;align-items:center;gap:.8rem;text-align:left;min-height:4.6rem;padding:.8rem 1rem;background:var(--c);color:#16163F;border:2.5px solid var(--edge);border-radius:14px;font-weight:700;font-size:1.05rem;box-shadow:4px 4px 0 var(--edge)}
+button.opt-blk{cursor:pointer}
+button.opt-blk:disabled{cursor:default;opacity:.45;box-shadow:none}
+button.opt-blk.picked{opacity:1;outline:4px solid var(--accent);outline-offset:2px}
+.opt-blk b{flex:none;width:2.2rem;height:2.2rem;display:grid;place-items:center;background:#fff;border:2px solid #16163F;border-radius:8px}
+.live-foot{justify-content:space-between;margin-top:1.4rem}
+.live-count{font-weight:700;font-size:1.1rem}
+.dist{position:relative;display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;margin-bottom:.6rem;background:#fff;color:#16163F;border:2.5px solid var(--edge);border-radius:12px;overflow:hidden;font-weight:700}
+.dist::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--c)}
+.dist>*{position:relative}
+.dist span{flex:1}
+.dist.right{outline:4px solid var(--ok);outline-offset:2px}
+.dist em{font-style:normal;font-variant-numeric:tabular-nums}
+.rank{list-style:none;padding:0;margin:.6rem 0 0;display:grid;gap:.4rem}
+.rank li{display:flex;justify-content:space-between;gap:1rem;padding:.5rem .9rem;background:var(--bg);border:2px solid var(--edge);border-radius:10px;font-weight:700}
+.rank li.me{background:var(--yellow);color:#16163F}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:.8rem;margin:1.2rem 0}
+.pod{width:min(30%,190px);text-align:center;font-weight:700}
+.pod .blk{display:grid;place-items:center;height:var(--h);margin-top:.4rem;background:var(--c);color:#16163F;border:2.5px solid var(--edge);border-radius:12px 12px 0 0;font:800 2.2rem var(--disp)}
+.pod small{display:block;font-weight:600;color:var(--muted)}
+.result-big{text-align:center;padding:1.5rem 0}
+.result-big h2{font-size:clamp(2rem,7vw,3.4rem)}
+.result-big .pts{font:800 clamp(2.4rem,9vw,4.4rem)/1 var(--disp);margin:.6rem 0}
+.result-ok h2{color:var(--ok)}.result-bad h2{color:var(--bad)}
+.resume{background:var(--yellow);color:#16163F;border:2.5px solid var(--edge);border-radius:12px;padding:.7rem 1rem;margin:1rem 0;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;font-weight:600}
+.code-inp{font:800 2.4rem var(--disp);letter-spacing:.3em;text-align:center;max-width:14rem}
+.hist{display:grid;gap:.6rem;margin-top:.6rem}
+.hist div{padding:.6rem .9rem;border:2px solid var(--edge);border-radius:10px;background:var(--bg)}
+.hist small{color:var(--muted);display:block}
+
+#toast{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));transform:translate(-50%,150%);background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;border-radius:12px;font-weight:600;max-width:calc(100% - 2rem);z-index:100;transition:transform .2s}
+#toast.show{transform:translate(-50%,0)}
+
+@media (max-width:800px){
+  .hero,.login{grid-template-columns:1fr;gap:1.6rem;padding-top:1.8rem}
+  .sample{max-width:420px}
+  .live{grid-template-columns:1fr}
+  .t-layout{grid-template-columns:1fr}
+  .opt-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <button class="brand" data-go="home"><span class="mark" aria-hidden="true"></span>Nível</button>
+    <nav id="nav" aria-label="Principal" hidden></nav>
+    <div class="who" id="who" hidden>
+      <span id="who-name"></span><span class="badge" id="who-role"></span>
+      <button class="btn btn-sm" id="logout">Sair</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="view-boot" class="boot">Conectando…</div>
+
+  <!-- LOGIN -->
+  <div id="view-login" hidden>
+    <section class="login">
+      <div>
+        <h1>Aprender no meio do jogo.</h1>
+        <p class="lead">Entre com o usuário e a senha que o seu professor criou para você.</p>
+      </div>
+      <div class="panel login-card" id="login-card"></div>
+    </section>
+  </div>
+
+  <!-- HOME -->
+  <div id="view-home" hidden>
+    <section class="hero">
+      <div>
+        <h1>Aprender no meio do jogo.</h1>
+        <p class="lead" id="hello"></p>
+        <div class="pick">
+          <label for="bank-select">Questionário</label>
+          <select id="bank-select"></select>
+        </div>
+        <div class="bank-info" id="bank-info"></div>
+      </div>
+      <div class="sample" aria-hidden="true">
+        <span class="sample-tag">Pergunta surpresa</span>
+        <p>Juros são…</p>
+        <div class="s-opt">Um desconto dado pela loja</div>
+        <div class="s-opt hit">O valor cobrado pelo uso do dinheiro ao longo do tempo</div>
+        <div class="s-opt">Uma taxa para abrir conta</div>
+      </div>
+    </section>
+    <section>
+      <h2 class="sec">Jogos disponíveis</h2>
+      <div class="live" id="live"></div>
+    </section>
+    <section class="cta" id="cta"></section>
+    <section>
+      <h2 class="sec">Em desenvolvimento</h2>
+      <div class="soon" id="soon"></div>
+    </section>
+  </div>
+
+  <!-- JOGO -->
+  <div id="view-game" hidden>
+    <div class="hud">
+      <button class="btn btn-sm" data-go="home">Sair do jogo</button>
+      <div class="hud-title" id="hud-title"></div>
+      <div class="hud-stats">
+        <span id="hud-info"></span>
+        <span id="hud-lives" role="img"></span>
+        <span>Pontos <span id="hud-score">0</span> <small id="hud-mult"></small></span>
+      </div>
+    </div>
+    <div class="stage" id="stage"></div>
+  </div>
+
+  <!-- QUESTIONÁRIOS (professor) -->
+  <div id="view-teacher" hidden>
+    <div class="t-layout">
+      <aside class="panel t-side">
+        <h2>Questionários</h2>
+        <ul id="bank-list"></ul>
+        <button class="btn btn-primary" data-act="new-bank">Novo questionário</button>
+      </aside>
+      <div id="editor"></div>
+    </div>
+  </div>
+
+  <!-- USUÁRIOS (master) -->
+  <div id="view-users" hidden></div>
+
+  <!-- SALA AO VIVO -->
+  <div id="view-live" hidden><div class="live-wrap" id="live-root"></div></div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="q-title" hidden>
+  <div class="q-card" id="modal-body"></div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* =====================================================================
+   Utilidades
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9);
+const rand = n => Math.floor(Math.random() * n);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+const clone = o => o === undefined ? undefined : JSON.parse(JSON.stringify(o));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const byName = (a, b) => String(a.name).localeCompare(String(b.name), 'pt-BR');
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
+const ssGet = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+const ssSet = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
+const ssDel = k => { try { sessionStorage.removeItem(k); } catch (e) {} };
+
+let toastT;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3600);
+}
+function armed(btn, label, fn) {
+  if (btn.dataset.armed) { fn(); return; }
+  btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = label;
+  setTimeout(() => { if (btn.isConnected) { delete btn.dataset.armed; btn.textContent = old; } }, 3000);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); toast('Copiado.'); return true; } catch (e) {}
+  try {
+    const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select(); const ok = document.execCommand('copy'); t.remove();
+    toast(ok ? 'Copiado.' : 'Não consegui copiar. Selecione o texto e copie manualmente.'); return ok;
+  } catch (e) { toast('Não consegui copiar. Selecione o texto e copie manualmente.'); return false; }
+}
+
+const LEVELS = {
+  facil:   { label: 'Fácil',   mult: 1,   note: 'pontos ×1' },
+  medio:   { label: 'Médio',   mult: 1.5, note: 'pontos ×1,5' },
+  dificil: { label: 'Difícil', mult: 2,   note: 'pontos ×2' }
+};
+const lv = k => LEVELS[k] || LEVELS.medio;
+const levelBadge = k => `<span class="badge b-${LEVELS[k] ? k : 'medio'}">${lv(k).label}</span>`;
+
+/* =====================================================================
+   Camada de dados
+   Nuvem: armazenamento compartilhado da plataforma (todos os aparelhos).
+   Local: localStorage do navegador (demonstração, uma máquina só).
+   Para trocar por um back-end de verdade, basta reescrever este objeto.
+   ===================================================================== */
+const Store = (() => {
+  let db = null, mode = 'local';
+  const LK = 'nivel-local-db';
+  const queues = new Map();
+  const seq = (p, fn) => {
+    const prev = queues.get(p) || Promise.resolve();
+    const next = prev.catch(() => {}).then(fn);
+    queues.set(p, next);
+    next.catch(() => {}).then(() => { if (queues.get(p) === next) queues.delete(p); });
+    return next;
+  };
+  const retry = async fn => {
+    try { return await fn(); }
+    catch (e) { if (e && e.code === 'unavailable') { await sleep(400 + rand(400)); return fn(); } throw e; }
+  };
+  const lsubs = new Set();
+  const lnotify = () => lsubs.forEach(f => f());
+  const lread = () => { try { return JSON.parse(lsGet(LK) || '{}'); } catch (e) { return {}; } };
+  const lwrite = o => { lsSet(LK, JSON.stringify(o)); lnotify(); };
+  window.addEventListener('storage', e => { if (e.key === LK) lnotify(); });
+  const merge = (a, b) => {
+    const o = clone(a);
+    for (const k in b) {
+      const bv = b[k];
+      if (bv && typeof bv === 'object' && !Array.isArray(bv) && o[k] && typeof o[k] === 'object' && !Array.isArray(o[k])) o[k] = merge(o[k], bv);
+      else o[k] = clone(bv);
+    }
+    return o;
+  };
+  const lcol = (o, c) => Object.keys(o).filter(k => k.startsWith(c + '/') && !k.slice(c.length + 1).includes('/')).sort()
+    .map(k => ({ id: k.slice(c.length + 1), data: clone(o[k]) }));
+  const lwatch = (read, cb) => {
+    let last; const run = () => { const v = read(); const s = JSON.stringify(v); if (s !== last) { last = s; cb(v); } };
+    lsubs.add(run); setTimeout(run, 0); return () => lsubs.delete(run);
+  };
+  return {
+    get mode() { return mode; },
+    async init() {
+      try { if (window.claude && window.claude.use) db = await window.claude.use('db'); } catch (e) { db = null; }
+      mode = db ? 'cloud' : 'local'; return mode;
+    },
+    async get(p) {
+      if (db) { const s = await retry(() => db.doc(p).get()); return s.exists ? clone(s.data()) : null; }
+      const v = lread()[p]; return v === undefined ? null : clone(v);
+    },
+    set(p, d) {
+      return seq(p, () => db ? retry(() => db.doc(p).set(clone(d))) : Promise.resolve(lwrite({ ...lread(), [p]: clone(d) })));
+    },
+    update(p, d) {
+      return seq(p, () => {
+        if (db) return retry(() => db.doc(p).update(clone(d)));
+        const o = lread(); if (o[p] === undefined) return Promise.reject({ code: 'invalid_argument' });
+        o[p] = merge(o[p], d); lwrite(o); return Promise.resolve();
+      });
+    },
+    del(p) {
+      return seq(p, () => {
+        if (db) return retry(() => db.doc(p).delete());
+        const o = lread(); delete o[p]; lwrite(o); return Promise.resolve();
+      });
+    },
+    async list(c) {
+      if (db) { const s = await retry(() => db.collection(c).get()); return s.docs.map(x => ({ id: x.id, data: clone(x.data()) })); }
+      return lcol(lread(), c);
+    },
+    watchDoc(p, cb) {
+      if (db) return db.doc(p).onSnapshot(s => cb(s.exists ? clone(s.data()) : null), e => console.warn('watchDoc', p, e));
+      return lwatch(() => { const v = lread()[p]; return v === undefined ? null : v; }, cb);
+    },
+    watchCol(c, cb) {
+      if (db) return db.collection(c).onSnapshot(s => cb(s.docs.map(x => ({ id: x.id, data: clone(x.data()) }))), e => console.warn('watchCol', c, e));
+      return lwatch(() => lcol(lread(), c), cb);
+    }
+  };
+})();
+
+/* =====================================================================
+   Senhas (PBKDF2 com sal por usuário)
+   ===================================================================== */
+const b64 = u => btoa(String.fromCharCode(...u));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const newSalt = () => b64(crypto.getRandomValues(new Uint8Array(16)));
+async function hashPw(pw, salt) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: unb64(salt), iterations: 100000 }, key, 256);
+  return b64(new Uint8Array(bits));
+}
+async function makeUser({ name, username, password, role, master }) {
+  const salt = newSalt();
+  return { username, name, role, master: !!master, salt, hash: await hashPw(password, salt), createdAt: Date.now(), createdBy: me ? me.username : username };
+}
+const genPw = () => { const c = 'abcdefghjkmnpqrstuvwxyz23456789'; return Array.from({ length: 6 }, () => c[rand(c.length)]).join(''); };
+const USER_RE = /^[a-z0-9][a-z0-9._-]{2,29}$/;
+
+/* =====================================================================
+   Estado global e navegação
+   ===================================================================== */
+let me = null, cur = 'boot';
+const cache = { banks: [], users: [] };
+const st = { active: lsGet('nivel-active-bank'), best: {} };
+const ui = { sel: null, editing: null, formDirty: false, history: [], resume: null, liveBank: null, liveTime: '20', liveN: '10', creds: null };
+const subs = [];
+const bootState = { mode: 'login' };
+const VIEWS = ['boot', 'login', 'home', 'game', 'teacher', 'users', 'live'];
+
+const activeBank = () => cache.banks.find(b => b.id === st.active) || cache.banks[0] || null;
+const canEditBank = b => !!me && (me.master || b.ownerId === me.username);
+
+function allowed(v) {
+  if (v === 'boot' || v === 'login') return true;
+  if (!me) return false;
+  if (v === 'teacher') return me.role === 'teacher';
+  if (v === 'users') return !!me.master;
+  return true;
+}
+function go(view) {
+  if (!allowed(view)) view = me ? 'home' : 'login';
+  if (view !== 'game') stopGame();
+  cur = view;
+  VIEWS.forEach(v => { $('#view-' + v).hidden = v !== view; });
+  $$('.tab').forEach(t => {
+    const on = t.dataset.go === view || (view === 'game' && t.dataset.go === 'home');
+    on ? t.setAttribute('aria-current', 'page') : t.removeAttribute('aria-current');
+  });
+  if (view === 'login') renderLogin();
+  if (view === 'home') renderHome();
+  if (view === 'teacher') renderTeacher();
+  if (view === 'users') renderUsersShell();
+  if (view === 'live') enterLive();
+  window.scrollTo(0, 0);
+}
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  const p = e.target.closest('[data-play]'); if (p) launch(p.dataset.play);
+});
+
+function buildChrome() {
+  const tabs = me.role === 'student' ? [['home', 'Jogar'], ['live', 'Sala ao vivo']]
+    : [['home', 'Jogar'], ['teacher', 'Questionários'], ['live', 'Sala ao vivo']];
+  if (me.master) tabs.push(['users', 'Usuários']);
+  const nav = $('#nav'); nav.hidden = false;
+  nav.innerHTML = tabs.map(([v, l]) => `<button class="tab" data-go="${v}">${l}</button>`).join('');
+  $('#who').hidden = false; $('#who-name').textContent = me.name;
+  const r = $('#who-role');
+  r.textContent = me.master ? 'Professor master' : me.role === 'teacher' ? 'Professor' : 'Aluno';
+  r.className = 'badge ' + (me.role === 'student' ? 'b-student' : 'b-teacher');
+}
+function clearChrome() { $('#nav').hidden = true; $('#nav').innerHTML = ''; $('#who').hidden = true; }
+
+/* =====================================================================
+   Login, configuração inicial e sessão
+   ===================================================================== */
+function renderLogin() {
+  const c = $('#login-card');
+  const local = Store.mode === 'local' ? '<p class="note">Modo local: os dados ficam só neste navegador (sem nuvem).</p>' : '';
+  if (bootState.mode === 'setup') {
+    c.innerHTML = `<h2>Configuração inicial</h2>
+      <p>Crie a conta do professor master. Ela poderá criar todos os outros professores e alunos.</p>
+      <form id="setup-form" novalidate>
+        <label class="fld">Seu nome<input class="inp" name="name" autocomplete="name" placeholder="Ex.: Marina Souza"></label>
+        <label class="fld">Usuário<input class="inp" name="username" autocomplete="username" autocapitalize="none" placeholder="Ex.: marina"></label>
+        <label class="fld">Senha (mínimo 6 caracteres)<input class="inp" type="password" name="password" autocomplete="new-password"></label>
+        <div class="err" id="login-err" role="alert"></div>
+        <button class="btn btn-primary" type="submit">Criar conta master e começar</button>
+      </form>${local}`;
+  } else if (bootState.mode === 'blocked') {
+    c.innerHTML = `<h2>Sistema ainda não configurado</h2><p>O professor master precisa abrir esta página primeiro para criar a conta inicial. Volte mais tarde.</p>${local}`;
+  } else if (bootState.mode === 'error') {
+    c.innerHTML = `<h2>Sem conexão com os dados</h2><p>Não consegui acessar o armazenamento. Recarregue a página e tente de novo.</p>`;
+  } else {
+    c.innerHTML = `<h2>Entrar</h2>
+      <form id="login-form" novalidate>
+        <label class="fld">Usuário<input class="inp" name="username" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+        <label class="fld">Senha<input class="inp" type="password" name="password" autocomplete="current-password"></label>
+        <div class="err" id="login-err" role="alert"></div>
+        <button class="btn btn-primary" type="submit">Entrar</button>
+      </form>
+      <p class="note">Esqueceu a senha? Peça ao seu professor para criar uma nova.</p>${local}`;
+  }
+}
+
+document.addEventListener('submit', async e => {
+  const id = e.target.id;
+  if (id !== 'login-form' && id !== 'setup-form') return;
+  e.preventDefault();
+  const f = e.target.elements, err = $('#login-err'), btn = $('button[type=submit]', e.target);
+  err.textContent = '';
+  if (!(window.crypto && crypto.subtle)) { err.textContent = 'Este navegador não permite o login seguro. Use uma versão mais recente.'; return; }
+  btn.disabled = true;
+  try {
+    if (id === 'login-form') await doLogin(f.username.value, f.password.value);
+    else await doSetup(f.name.value, f.username.value, f.password.value);
+  } catch (ex) { err.textContent = ex.message || 'Algo deu errado. Tente de novo.'; }
+  finally { btn.disabled = false; }
+});
+
+async function doLogin(username, pw) {
+  const u = username.trim().toLowerCase();
+  if (!u || !pw) throw new Error('Preencha o usuário e a senha.');
+  const rec = USER_RE.test(u) ? await Store.get('users/' + u) : null;
+  const h = rec ? await hashPw(pw, rec.salt) : null;
+  if (!rec || h !== rec.hash) throw new Error('Usuário ou senha incorretos.');
+  ssSet('nivel-session', JSON.stringify({ u, h: rec.hash }));
+  await startApp(rec);
+}
+async function doSetup(name, username, pw) {
+  name = name.trim(); const u = username.trim().toLowerCase();
+  if (name.length < 2) throw new Error('Escreva o seu nome.');
+  if (!USER_RE.test(u)) throw new Error('Usuário: 3 a 30 letras minúsculas, números, ponto, hífen ou sublinhado.');
+  if (pw.length < 6) throw new Error('A senha precisa ter pelo menos 6 caracteres.');
+  try {
+    const rec = await makeUser({ name, username: u, password: pw, role: 'teacher', master: true });
+    await Store.set('users/' + u, rec);
+    await Store.set('meta/app', { setup: true, createdAt: Date.now() });
+    for (const b of seedBanks(rec)) await Store.set('banks/' + b.id, b);
+    ssSet('nivel-session', JSON.stringify({ u, h: rec.hash }));
+    await startApp(rec);
+  } catch (ex) {
+    if (ex && ex.message && /nome|usuário|senha/i.test(ex.message) && !ex.code) throw ex;
+    throw new Error('Não foi possível criar a conta. A configuração inicial só pode ser feita por quem edita esta página.');
+  }
+}
+async function restoreSession() {
+  try {
+    const s = JSON.parse(ssGet('nivel-session') || 'null'); if (!s) return null;
+    const u = await Store.get('users/' + s.u);
+    if (u && u.hash === s.h) return u;
+  } catch (e) {}
+  ssDel('nivel-session'); return null;
+}
+function logout() {
+  stopGame(); liveReset();
+  subs.splice(0).forEach(u => { try { u(); } catch (e) {} });
+  ssDel('nivel-session'); ssDel('nivel-join');
+  me = null; cache.banks = []; cache.users = []; ui.sel = null; ui.editing = null; ui.creds = null;
+  clearChrome(); bootState.mode = 'login'; go('login');
+}
+$('#logout').addEventListener('click', logout);
+
+async function startApp(rec) {
+  me = { username: rec.username, name: rec.name, role: rec.role, master: !!rec.master };
+  buildChrome();
+  try { const sc = await Store.get('scores/' + me.username); st.best = (sc && sc.best) || {}; } catch (e) { st.best = {}; }
+  subs.push(Store.watchCol('banks', list => { cache.banks = list.map(x => x.data).sort(byName); onBanksChanged(); }));
+  if (me.master) subs.push(Store.watchCol('users', list => { cache.users = list.map(x => x.data).sort(byName); if (cur === 'users') renderUsersTable(); }));
+  go('home');
+  if (me.role === 'teacher') checkResume();
+  else { const jc = ssGet('nivel-join'); if (jc) joinRoom(jc, true); }
+}
+function onBanksChanged() {
+  if (cur === 'home') renderHome();
+  else if (cur === 'teacher') { renderBankList(); if (!editorBusy()) renderEditor(); }
+  else if (cur === 'live' && !Live.mode) renderLive();
+}
+
+/* =====================================================================
+   Dados de exemplo (criados na configuração inicial)
+   ===================================================================== */
+const Q = (text, options, correct, explanation) => ({ id: uid(), text, options, correct, explanation });
+function seedBanks(owner) {
+  const mk = (name, theme, level, questions) => ({ id: uid(), name, theme, level, ownerId: owner.username, ownerName: owner.name, questions, updatedAt: Date.now() });
+  return [
+    mk('Educação financeira', 'Dinheiro no dia a dia', 'medio', [
+      Q('O que é uma reserva de emergência?', ['Dinheiro separado para viagens','Dinheiro guardado para imprevistos, como um problema de saúde','Um tipo de empréstimo do banco','Um investimento de alto risco'], 1, 'Ela cobre gastos inesperados sem que você precise se endividar.'),
+      Q('Você viu um tênis caro em promoção e quer muito. O que ajuda a evitar uma compra por impulso?', ['Comprar logo, antes que acabe','Pedir dinheiro emprestado para não perder','Parcelar em muitas vezes','Esperar alguns dias e ver se ainda faz sentido'], 3, 'Dar um tempo esfria a vontade e deixa você decidir com a cabeça.'),
+      Q('Juros são…', ['Um desconto dado pelo vendedor','Um imposto sobre o salário','O valor cobrado ou pago pelo uso do dinheiro ao longo do tempo','Uma taxa para abrir conta'], 2, 'Quando você deve, paga juros. Quando investe, recebe juros.'),
+      Q('Qual destes é uma necessidade, e não um desejo?', ['Um videogame novo','Comida do dia a dia','Skin de jogo','Ingresso de show'], 1, 'Necessidades são o que precisamos para viver bem. Desejos são o que queremos a mais.'),
+      Q('Para que serve um orçamento pessoal?', ['Para planejar quanto dinheiro entra e quanto sai','Para pagar menos impostos','Para ganhar mais no fim do mês','Para conseguir empréstimo mais fácil'], 0, 'Com ele você enxerga para onde o dinheiro vai e evita sustos.'),
+      Q('Você ganha R$ 100 e gasta R$ 120. O que aconteceu?', ['Sobraram R$ 20','O banco cobre a diferença de graça','Você gastou R$ 20 que não tinha e ficou devendo','O dinheiro rendeu juros'], 2, 'Gastar mais do que se ganha leva ao endividamento.'),
+      Q('O cartão de crédito é…', ['Dinheiro extra que o banco dá de presente','Uma forma de pagar depois, mas a conta sempre chega','Uma conta de poupança','Um cartão que nunca cobra juros'], 1, 'Se você não paga a fatura inteira, os juros do cartão são muito altos.'),
+      Q('Guardar R$ 20 por semana durante 10 semanas dá quanto, sem contar juros?', ['R$ 100','R$ 200','R$ 120','R$ 20'], 1, '20 × 10 = 200. Pequenos valores constantes viram uma boa quantia.')
+    ]),
+    mk('Emoções e convivência', 'Saúde emocional e relações', 'facil', [
+      Q('Você está com muita raiva numa discussão. Qual atitude ajuda mais?', ['Gritar para o outro entender','Respirar fundo, dar um tempo e conversar depois','Ignorar a pessoa para sempre','Postar uma indireta nas redes'], 1, 'Com a cabeça mais calma, a conversa rende e ninguém se machuca.'),
+      Q('Empatia é…', ['Concordar com tudo que os outros falam','Sentir pena de quem está mal','Tentar entender o que o outro sente, colocando-se no lugar dele','Dar conselhos sem ouvir'], 2, 'Empatia começa em ouvir de verdade.'),
+      Q('Você vê um colega sofrendo bullying. O que fazer?', ['Rir para não virar alvo','Acolher o colega e avisar um adulto de confiança','Filmar e compartilhar','Fingir que não viu'], 1, 'Apoiar a vítima e pedir ajuda a um adulto ajuda a parar a situação.'),
+      Q('Qual frase expressa um sentimento sem culpar o outro?', ['“Você sempre me irrita.”','“A culpa é toda sua.”','“Você é insuportável.”','“Eu me senti chateado quando isso aconteceu.”'], 3, 'Falar de como você se sente abre espaço para o diálogo.'),
+      Q('Pedir ajuda quando a gente não está bem é…', ['Sinal de fraqueza','Exagero','Um jeito de cuidar de si, e faz parte de ser forte','Perda de tempo'], 2, 'Todo mundo precisa de apoio em algum momento.'),
+      Q('Quantas horas de sono, em média, um adolescente precisa por noite?', ['De 4 a 5 horas','De 6 a 7 horas','De 8 a 10 horas','Mais de 12 horas'], 2, 'Dormir bem ajuda o humor, a memória e a concentração.'),
+      Q('Qual destas atitudes pode ajudar a reduzir a ansiedade?', ['Praticar respiração, se movimentar e conversar com alguém','Ficar a noite toda no celular','Guardar tudo só para si','Pular refeições'], 0, 'Corpo e conversa andam juntos no cuidado com a mente.'),
+      Q('Você discorda de um amigo. Qual é a melhor postura?', ['Vencer a discussão a qualquer custo','Parar de falar com ele','Falar mal dele para outros','Ouvir o ponto de vista dele e explicar o seu com respeito'], 3, 'Discordar faz parte. O respeito mantém a amizade.')
+    ])
+  ];
+}
+
+/* =====================================================================
+   Home
+   ===================================================================== */
+const GAMES = [
+  { id: 'quiz', name: 'Quiz Relâmpago', emoji: '⚡', color: 'var(--yellow)', lives: 3, start: quiz, desc: 'Perguntas rápidas de 15 segundos. Quem acerta em sequência ganha bônus.' },
+  { id: 'memory', name: 'Memória dos Pares', emoji: '🃏', color: 'var(--mint)', lives: 5, start: memory, desc: 'Achou um par? Responda a pergunta para ficar com ele.' },
+  { id: 'snake', name: 'Cobrinha Curiosa', emoji: '🐍', color: 'var(--coral)', lives: 3, start: snake, desc: 'Cada maçã vira uma pergunta. Acertou, você cresce e ganha pontos.' },
+  { id: 'balloons', name: 'Estoura Balões', emoji: '🎈', color: 'var(--sky)', lives: 0, start: balloons, desc: 'Estoure balões, fuja das bombas e responda a cada 6 estouros.' }
+];
+const SOON = [['🏃','Corrida de obstáculos'],['🔤','Forca'],['🚢','Batalha naval'],['🗺️','Caça ao tesouro'],['🏰','Defesa da torre'],['🎡','Roleta da sorte']];
+
+function renderHome() {
+  const first = me.name.split(' ')[0];
+  $('#hello').textContent = `Oi, ${first}. Escolha um jogo e um questionário. As perguntas surgem durante a partida e valem pontos, vidas ou tempo extra.`;
+  const sel = $('#bank-select');
+  sel.innerHTML = cache.banks.map(b => `<option value="${b.id}">${esc(b.name)} (${lv(b.level).label})</option>`).join('') || '<option value="">Nenhum questionário disponível</option>';
+  const b = activeBank(); if (b) sel.value = b.id;
+  updateBankInfo();
+  $('#live').innerHTML = GAMES.map(g => `
+    <button class="tile" style="--c:${g.color}" data-play="${g.id}">
+      <span class="tile-emoji" aria-hidden="true">${g.emoji}</span>
+      <span class="tile-name">${g.name}</span>
+      <span class="tile-desc">${g.desc}</span>
+      <span class="tile-best">${st.best[g.id] ? `Seu recorde: ${st.best[g.id]} pontos` : 'Sem recorde ainda'}</span>
+    </button>`).join('');
+  $('#cta').innerHTML = me.role === 'teacher'
+    ? `<div><h2>Sala ao vivo</h2><p>Faça uma dinâmica com a turma toda ao mesmo tempo. Você projeta as perguntas e os alunos respondem no celular.</p></div><button class="btn" data-go="live">Criar uma sala</button>`
+    : `<div><h2>Sala ao vivo</h2><p>Seu professor abriu uma sala? Digite o código e responda junto com a turma.</p></div><button class="btn" data-go="live">Entrar em uma sala</button>`;
+  $('#soon').innerHTML = SOON.map(([e, n]) => `<div class="chip"><span aria-hidden="true">${e}</span>${n}</div>`).join('');
+}
+function updateBankInfo() {
+  const b = activeBank(), box = $('#bank-info');
+  if (!b) { box.innerHTML = me.role === 'teacher' ? 'Crie um questionário na aba Questionários.' : 'Peça ao professor para criar um questionário.'; return; }
+  box.innerHTML = `${levelBadge(b.level)}<span>${lv(b.level).note}</span>${b.theme ? `<span>Tema: ${esc(b.theme)}</span>` : ''}<span>${plural(b.questions.length, 'pergunta', 'perguntas')}</span>`;
+}
+$('#bank-select').addEventListener('change', e => { st.active = e.target.value; lsSet('nivel-active-bank', st.active); updateBankInfo(); });
+
+/* =====================================================================
+   Motor de perguntas
+   ===================================================================== */
+const modal = $('#modal');
+
+function renderQuestion(q, box, opts, done) {
+  const letters = ['A', 'B', 'C', 'D'];
+  const order = shuffle(q.options.map((t, i) => ({ t, i })));
+  box.innerHTML = `
+    <div class="q-top"><span class="q-tag">${esc(opts.tag)}</span><span class="q-time" data-time></span></div>
+    <div class="q-bar" aria-hidden="true"><i data-bar></i></div>
+    <h2 class="q-text" id="q-title">${esc(q.text)}</h2>
+    <div class="q-opts">${order.map((o, k) => `<button class="q-opt" data-i="${o.i}"><b>${letters[k]}</b><span>${esc(o.t)}</span></button>`).join('')}</div>
+    <div class="q-feedback"></div>`;
+  const btns = $$('.q-opt', box), bar = $('[data-bar]', box), timeEl = $('[data-time]', box), fb = $('.q-feedback', box);
+  const total = opts.seconds * 1000, t0 = Date.now();
+  let answered = false;
+  const tick = setInterval(() => {
+    const left = total - (Date.now() - t0);
+    bar.style.width = Math.max(0, left / total * 100) + '%';
+    bar.classList.toggle('low', left / total < .3);
+    timeEl.textContent = Math.ceil(Math.max(0, left) / 1000) + ' s';
+    if (left <= 0) finish(-1);
+  }, 100);
+  function onKey(e) {
+    if (answered) return;
+    const map = { '1': 0, '2': 1, '3': 2, '4': 3, a: 0, b: 1, c: 2, d: 3 };
+    const k = map[e.key.toLowerCase()];
+    if (k !== undefined && btns[k]) { e.preventDefault(); finish(+btns[k].dataset.i); }
+  }
+  document.addEventListener('keydown', onKey);
+  const cleanup = () => { clearInterval(tick); document.removeEventListener('keydown', onKey); };
+  function finish(choice) {
+    if (answered) return; answered = true; cleanup();
+    const correct = choice === q.correct;
+    btns.forEach(b => {
+      b.disabled = true; const i = +b.dataset.i;
+      if (i === q.correct) b.classList.add('is-right'); else if (i === choice) b.classList.add('is-wrong');
+    });
+    const head = choice === -1 ? 'Tempo esgotado.' : correct ? 'Acertou!' : 'Não foi dessa vez.';
+    fb.innerHTML = `<p class="${correct ? 'ok' : 'bad'}"><strong>${head}</strong> ${q.explanation ? esc(q.explanation) : ''}</p><button class="btn btn-primary" data-next>Continuar</button>`;
+    const nx = $('[data-next]', fb); nx.focus();
+    nx.onclick = () => done(correct);
+  }
+  btns.forEach(b => b.addEventListener('click', () => finish(+b.dataset.i)));
+  btns[0] && btns[0].focus();
+  return cleanup;
+}
+function makeDeck(bank) {
+  let pool = [];
+  return () => { if (!pool.length) pool = shuffle(bank.questions); return pool.pop(); };
+}
+
+/* =====================================================================
+   Executor de jogos
+   ===================================================================== */
+let G = null;
+function setHud(S) {
+  if (S !== G) return;
+  $('#hud-score').textContent = S.score;
+  $('#hud-mult').textContent = S.mult > 1 ? '(×' + String(S.mult).replace('.', ',') + ')' : '';
+  const L = $('#hud-lives');
+  if (S.g.lives > 0) {
+    L.hidden = false;
+    L.textContent = '♥'.repeat(Math.max(0, S.lives)) + '♡'.repeat(Math.max(0, S.g.lives - S.lives));
+    L.setAttribute('aria-label', plural(Math.max(0, S.lives), 'vida', 'vidas'));
+  } else L.hidden = true;
+  $('#hud-info').textContent = S.info || '';
+}
+function stopGame() {
+  if (!G) return;
+  const S = G; S.stopped = true;
+  S.cleanups.forEach(f => { try { f(); } catch (e) {} }); S.cleanups = [];
+  if (S.abortQ) S.abortQ();
+  modal.hidden = true; $('#stage').innerHTML = ''; G = null;
+}
+function launch(id) {
+  const g = GAMES.find(x => x.id === id);
+  const bank = activeBank();
+  if (!bank || bank.questions.length < 4) { toast('Este questionário precisa de pelo menos 4 perguntas para os jogos.'); return; }
+  stopGame(); go('game');
+  const stage = $('#stage'); stage.innerHTML = '';
+  const S = { g, deck: makeDeck(bank), bankSize: bank.questions.length, mult: lv(bank.level).mult, score: 0, lives: g.lives, info: '', over: false, stopped: false, asked: 0, right: 0, cleanups: [], abortQ: null };
+  G = S;
+  $('#hud-title').textContent = g.name;
+  setHud(S);
+  const api = {
+    stage,
+    get lives() { return S.lives; },
+    get bankSize() { return S.bankSize; },
+    get mult() { return S.mult; },
+    isOver: () => S.over || S.stopped,
+    add(n) { S.score = Math.max(0, S.score + Math.round(n * S.mult)); setHud(S); },
+    info(t) { S.info = t; setHud(S); },
+    onStop(fn) { S.cleanups.push(fn); },
+    loseLife() { S.lives--; setHud(S); if (S.lives <= 0) api.end('Acabaram as vidas.'); return S.lives; },
+    ask(opts = {}) {
+      return new Promise(resolve => {
+        if (api.isOver()) return;
+        const q = S.deck();
+        let box;
+        if (opts.inline) {
+          box = $('.q-card.inline', stage);
+          if (!box) { box = document.createElement('div'); box.className = 'q-card inline'; stage.prepend(box); }
+        } else { box = $('#modal-body'); modal.hidden = false; }
+        S.abortQ = renderQuestion(q, box, { seconds: opts.seconds || 20, tag: opts.tag || 'Pergunta' }, correct => {
+          S.abortQ = null; if (!opts.inline) modal.hidden = true;
+          S.asked++; if (correct) S.right++;
+          resolve(correct);
+        });
+      });
+    },
+    end(msg) {
+      if (S.over || S.stopped) return; S.over = true;
+      S.cleanups.forEach(f => { try { f(); } catch (e) {} }); S.cleanups = [];
+      if (S.abortQ) { S.abortQ(); S.abortQ = null; }
+      modal.hidden = true;
+      const prev = st.best[g.id] || 0, rec = S.score > prev;
+      if (rec) { st.best[g.id] = S.score; Store.set('scores/' + me.username, { best: st.best, updatedAt: Date.now() }).catch(() => {}); }
+      const ov = document.createElement('div'); ov.className = 'end';
+      ov.innerHTML = `<h2>${esc(msg)}</h2><p class="end-score">${S.score}<small> pontos</small></p>
+        <p>${S.right} de ${S.asked} perguntas respondidas corretamente.${rec && S.score > 0 ? ' <strong>Novo recorde!</strong>' : ''}</p>
+        <div class="row" style="justify-content:center"><button class="btn btn-primary" data-again>Jogar de novo</button><button class="btn" data-go="home">Escolher outro jogo</button></div>`;
+      $('[data-again]', ov).onclick = () => launch(g.id);
+      stage.appendChild(ov); $('[data-again]', ov).focus();
+    }
+  };
+  g.start(api);
+}
+
+/* ---------- jogo 1: Quiz Relâmpago ---------- */
+async function quiz(api) {
+  const rounds = Math.min(10, api.bankSize);
+  let streak = 0;
+  for (let r = 1; r <= rounds && !api.isOver(); r++) {
+    api.info(`Pergunta ${r} de ${rounds}. Sequência: ${streak}`);
+    const ok = await api.ask({ inline: true, seconds: 15, tag: `Pergunta ${r} de ${rounds}` });
+    if (api.isOver()) return;
+    if (ok) { streak++; api.add(100 + (streak - 1) * 25); } else { streak = 0; api.loseLife(); }
+  }
+  if (!api.isOver()) api.end('Rodada completa!');
+}
+
+/* ---------- jogo 2: Memória dos Pares ---------- */
+function memory(api) {
+  const EMOJI = ['🚀','🎧','🌵','🍕','⚽','🎨','🦊','🌈','🎸','🐙'];
+  const pick = shuffle(EMOJI).slice(0, 6);
+  const cards = shuffle([...pick, ...pick]).map((e, i) => ({ e, i, open: false, done: false }));
+  const wrap = document.createElement('div'); wrap.className = 'mem';
+  wrap.innerHTML = cards.map(c => `<button class="mem-card" data-i="${c.i}" aria-label="Carta virada para baixo"><span class="back">?</span><span class="front">${c.e}</span></button>`).join('');
+  api.stage.appendChild(wrap);
+  let first = null, lock = false, found = 0;
+  api.info('Pares encontrados: 0 de 6');
+  const el = c => wrap.children[c.i];
+  const flip = (c, open) => { c.open = open; el(c).classList.toggle('open', open); el(c).setAttribute('aria-label', open ? `Carta ${c.e}` : 'Carta virada para baixo'); };
+  const timers = [];
+  api.onStop(() => timers.forEach(clearTimeout));
+  wrap.addEventListener('click', async e => {
+    const b = e.target.closest('.mem-card'); if (!b || lock || api.isOver()) return;
+    const c = cards[+b.dataset.i]; if (c.open || c.done) return;
+    flip(c, true);
+    if (!first) { first = c; return; }
+    const a = first; first = null;
+    lock = true;
+    if (a.e !== c.e) { timers.push(setTimeout(() => { flip(a, false); flip(c, false); lock = false; }, 800)); return; }
+    await new Promise(r => timers.push(setTimeout(r, 400)));
+    const ok = await api.ask({ tag: 'Par encontrado! Responda para ficar com ele' });
+    if (api.isOver()) return;
+    if (ok) {
+      a.done = c.done = true; el(a).classList.add('done'); el(c).classList.add('done');
+      api.add(100); found++; api.info(`Pares encontrados: ${found} de 6`);
+      if (found === 6) { api.add(api.lives * 50); api.end('Todos os pares!'); return; }
+    } else {
+      flip(a, false); flip(c, false);
+      if (api.loseLife() <= 0) return;
+    }
+    lock = false;
+  });
+}
+
+/* ---------- jogo 3: Cobrinha Curiosa ---------- */
+function snake(api) {
+  const N = 20, C = 20, stage = api.stage;
+  const cv = document.createElement('canvas'); cv.width = cv.height = N * C; cv.className = 'snake-cv';
+  cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', 'Tabuleiro da cobrinha');
+  const pad = document.createElement('div'); pad.className = 'dpad';
+  pad.innerHTML = '<button data-d="up" aria-label="Para cima">▲</button><button data-d="left" aria-label="Para a esquerda">◀</button><button data-d="right" aria-label="Para a direita">▶</button><button data-d="down" aria-label="Para baixo">▼</button>';
+  stage.append(cv, pad);
+  const g = cv.getContext('2d');
+  const V = { up: {x:0,y:-1}, down: {x:0,y:1}, left: {x:-1,y:0}, right: {x:1,y:0} };
+  const KEYS = { arrowup:'up', arrowdown:'down', arrowleft:'left', arrowright:'right', w:'up', s:'down', a:'left', d:'right' };
+  let s, dir, next, food, grow, timer, started, asking = false, speed = 150;
+  function reset() {
+    s = [{x:10,y:10},{x:9,y:10},{x:8,y:10}]; dir = next = V.right; grow = 0; started = false;
+    placeFood(); draw();
+  }
+  function placeFood() {
+    let f; do { f = { x: rand(N), y: rand(N) }; } while (s.some(p => p.x === f.x && p.y === f.y));
+    food = f;
+  }
+  const run = () => { clearInterval(timer); timer = setInterval(tick, speed); };
+  function steer(name) {
+    if (asking || api.isOver()) return;
+    const d = V[name]; if (d.x === -dir.x && d.y === -dir.y) return;
+    next = d; if (!started) { started = true; run(); }
+  }
+  function tick() {
+    if (api.isOver()) return;
+    dir = next;
+    const h = { x: (s[0].x + dir.x + N) % N, y: (s[0].y + dir.y + N) % N };
+    if (s.some(p => p.x === h.x && p.y === h.y)) {
+      clearInterval(timer);
+      if (api.loseLife() > 0) reset();
+      return;
+    }
+    s.unshift(h);
+    if (h.x === food.x && h.y === food.y) { eat(); return; }
+    if (grow > 0) grow--; else s.pop();
+    draw();
+  }
+  async function eat() {
+    clearInterval(timer); asking = true; draw();
+    const ok = await api.ask({ tag: 'Você pegou uma maçã!' });
+    if (api.isOver()) return;
+    if (ok) { api.add(100); grow += 2; speed = Math.max(70, speed - 6); }
+    else {
+      if (api.loseLife() <= 0) return;
+      for (let i = 0; i < 2 && s.length > 3; i++) s.pop();
+    }
+    placeFood(); asking = false; draw();
+    timer = setTimeout(run, 700);
+  }
+  function draw() {
+    g.fillStyle = '#16163F'; g.fillRect(0, 0, N * C, N * C);
+    g.fillStyle = 'rgba(255,255,255,.06)';
+    for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) if ((x + y) % 2) g.fillRect(x * C, y * C, C, C);
+    g.fillStyle = '#FF8FA0'; g.beginPath(); g.arc(food.x * C + C / 2, food.y * C + C / 2, C / 2 - 2, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#16163F'; g.font = 'bold 14px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('?', food.x * C + C / 2, food.y * C + C / 2 + 1);
+    s.forEach((p, i) => { g.fillStyle = i === 0 ? '#FFD23F' : '#5EEAC0'; g.fillRect(p.x * C + 1, p.y * C + 1, C - 2, C - 2); });
+    if (!started) {
+      g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(40, 170, 320, 60);
+      g.fillStyle = '#fff'; g.font = 'bold 16px sans-serif';
+      g.fillText('Use as setas ou deslize para começar', N * C / 2, N * C / 2);
+    }
+  }
+  const onKey = e => {
+    const k = KEYS[e.key.toLowerCase()]; if (!k || asking) return;
+    if (e.key.startsWith('Arrow')) e.preventDefault();
+    steer(k);
+  };
+  document.addEventListener('keydown', onKey);
+  let sx = 0, sy = 0;
+  cv.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; });
+  cv.addEventListener('pointerup', e => {
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+    steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+  });
+  pad.addEventListener('pointerdown', e => { const b = e.target.closest('[data-d]'); if (b) { e.preventDefault(); steer(b.dataset.d); } });
+  api.onStop(() => { clearInterval(timer); document.removeEventListener('keydown', onKey); });
+  api.info('Cada maçã é uma pergunta');
+  reset();
+}
+
+/* ---------- jogo 4: Estoura Balões ---------- */
+function balloons(api) {
+  const sky = document.createElement('div'); sky.className = 'sky'; api.stage.appendChild(sky);
+  const COLORS = ['#FF8FA0', '#FFD23F', '#5EEAC0', '#B9B6FF', '#FF9F5E'];
+  let time = 60, list = [], pops = 0, spawnT = 0, spawnEvery = 700, last = performance.now(), raf = 0, asking = false, lastSec = -1, elapsed = 0;
+  function floatText(txt, x, y) {
+    const f = document.createElement('span'); f.className = 'float'; f.textContent = txt;
+    f.style.left = x + 'px'; f.style.top = y + 'px'; sky.appendChild(f); setTimeout(() => f.remove(), 800);
+  }
+  function spawn() {
+    const bomb = Math.random() < .14;
+    const el = document.createElement('button');
+    el.className = 'balloon'; el.setAttribute('aria-label', bomb ? 'Bomba' : 'Balão');
+    el.style.left = rand(Math.max(1, sky.clientWidth - 64)) + 'px';
+    el.style.background = bomb ? '#16163F' : COLORS[rand(COLORS.length)];
+    if (bomb) el.textContent = '✖';
+    const b = { el, bomb, y: sky.clientHeight + 10, speed: 70 + Math.random() * 60 };
+    el.addEventListener('pointerdown', ev => { ev.preventDefault(); pop(b); });
+    sky.appendChild(el); list.push(b);
+  }
+  function pop(b) {
+    if (asking || api.isOver() || !list.includes(b)) return;
+    list = list.filter(x => x !== b);
+    const x = parseFloat(b.el.style.left), y = b.y;
+    b.el.classList.add('pop'); setTimeout(() => b.el.remove(), 200);
+    if (b.bomb) { time -= 5; floatText('-5 s', x, y); return; }
+    api.add(10); floatText('+' + Math.round(10 * api.mult), x, y); pops++;
+    if (pops % 6 === 0) questionTime();
+  }
+  async function questionTime() {
+    asking = true;
+    const ok = await api.ask({ tag: 'Pergunta relâmpago' });
+    if (api.isOver()) return;
+    if (ok) { api.add(100); time += 8; } else { time -= 5; }
+    asking = false; last = performance.now();
+  }
+  function frame(now) {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (asking || api.isOver()) return;
+    time -= dt; elapsed += dt; spawnT += dt * 1000;
+    if (spawnT >= spawnEvery) { spawnT = 0; spawn(); spawnEvery = Math.max(380, spawnEvery - 5); }
+    const boost = 1 + Math.min(.6, elapsed / 100);
+    list.forEach(b => { b.y -= b.speed * boost * dt; b.el.style.transform = `translateY(${b.y}px)`; });
+    list = list.filter(b => { if (b.y < -100) { b.el.remove(); return false; } return true; });
+    const sec = Math.ceil(Math.max(0, time));
+    if (sec !== lastSec) { lastSec = sec; api.info(`Tempo: ${sec} s`); }
+    if (time <= 0) api.end('O tempo acabou!');
+  }
+  api.onStop(() => cancelAnimationFrame(raf));
+  api.info('Tempo: 60 s');
+  raf = requestAnimationFrame(frame);
+}
+
+/* =====================================================================
+   Questionários (professor)
+   ===================================================================== */
+function editorBusy() {
+  const a = document.activeElement, ed = $('#editor');
+  return ui.formDirty || (ed && a && ed.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+}
+const selBank = () => cache.banks.find(b => b.id === ui.sel) || null;
+function saveBank(b) {
+  b.updatedAt = Date.now();
+  return Store.set('banks/' + b.id, b).catch(() => toast('Não foi possível salvar. Verifique a conexão e tente de novo.'));
+}
+function renderBankList() {
+  $('#bank-list').innerHTML = cache.banks.map(b => `
+    <li><button class="bank-btn" data-bank="${b.id}" ${b.id === ui.sel ? 'aria-current="true"' : ''}>
+      <span>${esc(b.name)}</span>
+      <span class="meta">${levelBadge(b.level)}<small>${plural(b.questions.length, 'pergunta', 'perguntas')}</small></span>
+      ${b.theme ? `<small>${esc(b.theme)}</small>` : ''}</button></li>`).join('') || '<li class="note">Nenhum questionário ainda.</li>';
+}
+function editorHtml(bank) {
+  const can = canEditBank(bank), dis = can ? '' : 'disabled';
+  const eq = ui.editing ? bank.questions.find(q => q.id === ui.editing) : null;
+  const opt = i => eq && eq.options[i] !== undefined ? eq.options[i] : '';
+  const letters = ['A', 'B', 'C', 'D'];
+  return `
+  <div class="panel">
+    ${can ? '' : `<div class="readonly-note">Este questionário é de ${esc(bank.ownerName || 'outro professor')}. Você pode ver e testar, mas para editar faça uma cópia.</div>`}
+    <div class="ed-head">
+      <label class="fld">Nome do questionário<input class="inp" id="bank-name" value="${esc(bank.name)}" ${dis}></label>
+      <label class="fld">Tema<input class="inp" id="bank-theme" value="${esc(bank.theme || '')}" placeholder="Ex.: Educação financeira, Saúde emocional, Cidadania" ${dis}></label>
+      <fieldset class="seg"><legend>Nível de dificuldade</legend>
+        ${Object.entries(LEVELS).map(([k, v]) => `<label class="seg-i"><input type="radio" name="level" value="${k}" ${bank.level === k || (!LEVELS[bank.level] && k === 'medio') ? 'checked' : ''} ${dis}><span>${v.label}<small>${v.note}</small></span></label>`).join('')}
+      </fieldset>
+      <div class="row">
+        <button class="btn btn-primary" data-act="play-bank">Testar nos jogos</button>
+        <button class="btn" data-act="dup-bank">Duplicar</button>
+        ${can ? '<button class="btn btn-danger" data-act="del-bank">Excluir questionário</button>' : ''}
+      </div>
+    </div>
+
+    <h3 class="t-h" style="margin-top:0">Perguntas (${bank.questions.length})</h3>
+    ${bank.questions.length ? `<ul class="qlist">${bank.questions.map(q => `
+      <li class="qi">
+        <div class="qi-text">${esc(q.text)}</div>
+        <ul class="qi-opts">${q.options.map((o, i) => `<li class="${i === q.correct ? 'right' : ''}">${i === q.correct ? '✔ ' : ''}${esc(o)}</li>`).join('')}</ul>
+        ${q.explanation ? `<p class="qi-expl">${esc(q.explanation)}</p>` : ''}
+        ${can ? `<div class="row"><button class="btn btn-sm" data-act="edit-q" data-id="${q.id}">Editar</button><button class="btn btn-sm btn-danger" data-act="del-q" data-id="${q.id}">Excluir</button></div>` : ''}
+      </li>`).join('')}</ul>` : `<p class="note">Este questionário ainda não tem perguntas. Os jogos pedem pelo menos 4.</p>`}
+
+    ${can ? `
+    <h3 class="t-h" id="form-title">${eq ? 'Editar pergunta' : 'Adicionar pergunta'}</h3>
+    <form id="q-form" novalidate>
+      <label class="fld" style="margin-bottom:.8rem">Enunciado<textarea class="inp" name="text" placeholder="Ex.: O que é uma reserva de emergência?">${esc(eq ? eq.text : '')}</textarea></label>
+      <fieldset style="border:0;padding:0;margin:0 0 .8rem"><legend style="font-weight:700;margin-bottom:.4rem">Alternativas (marque a correta; mínimo de 2)</legend>
+        ${[0,1,2,3].map(i => `<div class="optrow">
+          <label class="rad"><input type="radio" name="correct" value="${i}" ${eq && eq.correct === i ? 'checked' : ''}>Correta</label>
+          <input class="inp" name="o${i}" placeholder="Alternativa ${letters[i]}" value="${esc(opt(i))}" aria-label="Alternativa ${letters[i]}">
+        </div>`).join('')}
+      </fieldset>
+      <label class="fld">Explicação depois da resposta (opcional)<input class="inp" name="expl" value="${esc(eq ? eq.explanation || '' : '')}" placeholder="Ex.: Ela cobre gastos inesperados sem que você se endivide."></label>
+      <div class="err" id="q-err" role="alert"></div>
+      <div class="row"><button class="btn btn-primary" type="submit">${eq ? 'Salvar alterações' : 'Adicionar pergunta'}</button>${eq ? '<button class="btn" type="button" data-act="cancel-edit">Cancelar edição</button>' : ''}</div>
+    </form>` : ''}
+
+    <h3 class="t-h">Backup e compartilhamento</h3>
+    <p class="note" style="margin-top:0">Gere o JSON para guardar ou enviar a outro professor. Para importar, cole um JSON aqui e clique em importar.</p>
+    <textarea class="inp json-box" id="json-box" aria-label="JSON do questionário" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:.7rem">
+      <button class="btn btn-sm" data-act="gen-json">Gerar JSON deste questionário</button>
+      <button class="btn btn-sm" data-act="copy-json">Copiar</button>
+      <button class="btn btn-sm" data-act="import-json">Importar como novo questionário</button>
+    </div>
+  </div>`;
+}
+function renderEditor() {
+  const bank = selBank();
+  ui.formDirty = false;
+  $('#editor').innerHTML = bank ? editorHtml(bank)
+    : `<div class="panel empty"><h2>Comece criando um questionário</h2><p>Depois adicione perguntas com 2 a 4 alternativas. Os jogos e as salas ao vivo vão sorteá-las.</p></div>`;
+}
+function renderTeacher() {
+  if (!selBank()) ui.sel = (activeBank() || {}).id || null;
+  renderBankList(); renderEditor();
+}
+async function newBankDoc(name) {
+  const b = { id: uid(), name, theme: '', level: 'medio', ownerId: me.username, ownerName: me.name, questions: [], updatedAt: Date.now() };
+  cache.banks.push(b); cache.banks.sort(byName); await saveBank(b); return b;
+}
+const tv = $('#view-teacher');
+tv.addEventListener('click', async e => {
+  const bb = e.target.closest('[data-bank]');
+  if (bb) { ui.sel = bb.dataset.bank; ui.editing = null; renderTeacher(); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const bank = selBank();
+  switch (a.dataset.act) {
+    case 'new-bank': { const b = await newBankDoc('Novo questionário'); ui.sel = b.id; ui.editing = null; renderTeacher(); const n = $('#bank-name'); if (n) n.select(); break; }
+    case 'play-bank': st.active = bank.id; lsSet('nivel-active-bank', st.active); go('home'); break;
+    case 'dup-bank': {
+      const b = await newBankDoc(bank.name + ' (cópia)');
+      b.theme = bank.theme || ''; b.level = bank.level; b.questions = clone(bank.questions).map(q => ({ ...q, id: uid() }));
+      await saveBank(b); ui.sel = b.id; ui.editing = null; renderTeacher(); toast('Cópia criada. Ela é sua.'); break;
+    }
+    case 'del-bank': armed(a, 'Clique de novo para excluir', async () => {
+      cache.banks = cache.banks.filter(b => b.id !== bank.id);
+      try { await Store.del('banks/' + bank.id); } catch (er) { toast('Não foi possível excluir.'); }
+      ui.sel = null; ui.editing = null; renderTeacher(); toast('Questionário excluído.');
+    }); break;
+    case 'edit-q': ui.editing = a.dataset.id; renderEditor(); $('#form-title').scrollIntoView({ block: 'start' }); break;
+    case 'cancel-edit': ui.editing = null; renderEditor(); break;
+    case 'del-q': armed(a, 'Confirmar?', async () => {
+      bank.questions = bank.questions.filter(q => q.id !== a.dataset.id);
+      if (ui.editing === a.dataset.id) ui.editing = null;
+      await saveBank(bank); renderTeacher(); toast('Pergunta excluída.');
+    }); break;
+    case 'gen-json': {
+      const out = { name: bank.name, theme: bank.theme || '', level: bank.level, questions: bank.questions.map(({ text, options, correct, explanation }) => ({ text, options, correct, explanation: explanation || '' })) };
+      $('#json-box').value = JSON.stringify(out, null, 2); break;
+    }
+    case 'copy-json': { const box = $('#json-box'); if (!box.value) { toast('Gere o JSON primeiro.'); break; } box.select(); copyText(box.value); break; }
+    case 'import-json': importJson(); break;
+  }
+});
+tv.addEventListener('input', e => { if (e.target.closest('#q-form')) ui.formDirty = true; });
+tv.addEventListener('change', async e => {
+  const bank = selBank(); if (!bank || !canEditBank(bank)) return;
+  if (e.target.id === 'bank-name') { bank.name = e.target.value.trim() || 'Sem título'; cache.banks.sort(byName); await saveBank(bank); renderBankList(); }
+  else if (e.target.id === 'bank-theme') { bank.theme = e.target.value.trim(); await saveBank(bank); renderBankList(); }
+  else if (e.target.name === 'level') { bank.level = e.target.value; await saveBank(bank); renderBankList(); }
+});
+tv.addEventListener('submit', async e => {
+  if (e.target.id !== 'q-form') return;
+  e.preventDefault();
+  const f = e.target.elements, err = $('#q-err'), bank = selBank();
+  if (!bank || !canEditBank(bank)) return;
+  const text = f.text.value.trim();
+  const raw = [0, 1, 2, 3].map(i => f['o' + i].value.trim());
+  const idxs = raw.map((t, i) => t ? i : -1).filter(i => i >= 0);
+  const cv = f.correct.value;
+  if (!text) { err.textContent = 'Escreva o enunciado da pergunta.'; return; }
+  if (idxs.length < 2) { err.textContent = 'Preencha pelo menos 2 alternativas.'; return; }
+  if (cv === '' || !raw[+cv]) { err.textContent = 'Marque qual alternativa é a correta. Ela precisa estar preenchida.'; return; }
+  const item = { text, options: idxs.map(i => raw[i]), correct: idxs.indexOf(+cv), explanation: f.expl.value.trim() };
+  if (ui.editing) { const q = bank.questions.find(x => x.id === ui.editing); Object.assign(q, item); toast('Pergunta atualizada.'); }
+  else { bank.questions.push({ id: uid(), ...item }); toast('Pergunta adicionada.'); }
+  ui.editing = null; await saveBank(bank); renderTeacher();
+});
+async function importJson() {
+  const box = $('#json-box');
+  try {
+    const d = JSON.parse(box.value);
+    if (!d || !Array.isArray(d.questions) || !d.questions.length) throw new Error('vazio');
+    const qs = d.questions.map(q => {
+      if (typeof q.text !== 'string' || !q.text.trim() || !Array.isArray(q.options) || q.options.length < 2 || q.options.length > 4 ||
+          q.options.some(o => typeof o !== 'string' || !o.trim()) || !Number.isInteger(q.correct) || q.correct < 0 || q.correct >= q.options.length) throw new Error('formato');
+      return { id: uid(), text: q.text.trim(), options: q.options.map(o => o.trim()), correct: q.correct, explanation: typeof q.explanation === 'string' ? q.explanation : '' };
+    });
+    const b = await newBankDoc((typeof d.name === 'string' && d.name.trim()) || 'Questionário importado');
+    b.questions = qs; b.theme = typeof d.theme === 'string' ? d.theme : ''; b.level = LEVELS[d.level] ? d.level : 'medio';
+    await saveBank(b); ui.sel = b.id; ui.editing = null; renderTeacher();
+    toast(`Importado: ${plural(qs.length, 'pergunta', 'perguntas')}.`);
+  } catch (e) { toast('Não consegui ler esse JSON. Confira se ele veio do botão "Gerar JSON".'); }
+}
+
+/* =====================================================================
+   Usuários (somente professor master)
+   ===================================================================== */
+function renderUsersShell() {
+  $('#view-users').innerHTML = `<div class="u-wrap">
+    <div class="panel">
+      <h2>Criar usuário</h2>
+      <form id="u-form" novalidate>
+        <div class="u-grid">
+          <label class="fld">Nome completo<input class="inp" name="name" autocomplete="off"></label>
+          <label class="fld">Usuário<input class="inp" name="username" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ex.: ana.lima"></label>
+          <label class="fld">Senha<input class="inp" name="password" autocomplete="off" placeholder="em branco = gerar"></label>
+          <label class="fld">Tipo<select class="inp" name="role"><option value="student">Aluno</option><option value="teacher">Professor</option></select></label>
+        </div>
+        <div class="err" id="u-err" role="alert"></div>
+        <button class="btn btn-primary" type="submit">Criar usuário</button>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Criar vários alunos de uma vez</h2>
+      <p class="note" style="margin-top:0">Escreva um nome por linha. O sistema cria o usuário (ex.: ana.lima) e uma senha temporária para cada aluno.</p>
+      <textarea class="inp" id="bulk-names" placeholder="Ana Lima&#10;Bruno Costa&#10;Carla Mendes" style="min-height:8rem"></textarea>
+      <div class="row" style="margin-top:.7rem"><button class="btn btn-primary" data-uact="bulk">Criar alunos</button></div>
+    </div>
+    <div id="u-result"></div>
+    <div class="panel"><h2>Usuários cadastrados</h2><div class="scroll" id="u-table"></div></div>
+  </div>`;
+  renderCreds(); renderUsersTable();
+}
+function renderUsersTable() {
+  const t = $('#u-table'); if (!t) return;
+  t.innerHTML = `<table class="utable"><thead><tr><th>Nome</th><th>Usuário</th><th>Tipo</th><th>Ações</th></tr></thead><tbody>
+    ${cache.users.map(u => `<tr>
+      <td>${esc(u.name)}</td><td>${esc(u.username)}</td>
+      <td><span class="badge ${u.role === 'student' ? 'b-student' : 'b-teacher'}">${u.master ? 'Professor master' : u.role === 'teacher' ? 'Professor' : 'Aluno'}</span></td>
+      <td>${u.master ? '' : `<div class="row"><button class="btn btn-sm" data-uact="reset" data-u="${esc(u.username)}">Nova senha</button><button class="btn btn-sm btn-danger" data-uact="del" data-u="${esc(u.username)}">Excluir</button></div>`}</td>
+    </tr>`).join('')}</tbody></table>`;
+}
+function renderCreds() {
+  const box = $('#u-result'); if (!box) return;
+  if (!ui.creds) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="creds"><strong>${esc(ui.creds.title)}</strong>
+    <table><thead><tr><th>Nome</th><th>Usuário</th><th>Senha</th></tr></thead><tbody>
+    ${ui.creds.list.map(c => `<tr><td>${esc(c.name)}</td><td>${esc(c.username)}</td><td>${esc(c.password)}</td></tr>`).join('')}</tbody></table>
+    <p style="margin:.2rem 0 .8rem">Anote agora. As senhas não ficam guardadas e não dá para vê-las depois (só gerar uma nova).</p>
+    <div class="row"><button class="btn btn-sm" data-uact="copy-creds">Copiar lista</button><button class="btn btn-sm" data-uact="hide-creds">Fechar</button></div></div>`;
+}
+const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+function usernameFor(name, taken) {
+  const t = slug(name); let base = t.length > 1 ? t[0] + '.' + t[t.length - 1] : (t[0] || 'aluno');
+  while (base.length < 3) base += rand(10);
+  base = base.slice(0, 26); let u = base, n = 2;
+  while (taken.has(u)) u = base + n++;
+  taken.add(u); return u;
+}
+const uv = $('#view-users');
+uv.addEventListener('submit', async e => {
+  if (e.target.id !== 'u-form') return;
+  e.preventDefault();
+  const f = e.target.elements, err = $('#u-err'), btn = $('button[type=submit]', e.target);
+  const name = f.name.value.trim(), u = f.username.value.trim().toLowerCase(); let pw = f.password.value;
+  if (name.length < 2) { err.textContent = 'Escreva o nome completo.'; return; }
+  if (!USER_RE.test(u)) { err.textContent = 'Usuário: 3 a 30 letras minúsculas, números, ponto, hífen ou sublinhado.'; return; }
+  if (cache.users.some(x => x.username === u)) { err.textContent = 'Esse usuário já existe. Escolha outro.'; return; }
+  if (!pw) pw = genPw(); else if (pw.length < 6) { err.textContent = 'A senha precisa ter pelo menos 6 caracteres.'; return; }
+  err.textContent = ''; btn.disabled = true;
+  try {
+    await Store.set('users/' + u, await makeUser({ name, username: u, password: pw, role: f.role.value }));
+    ui.creds = { title: 'Usuário criado', list: [{ name, username: u, password: pw }] };
+    renderCreds(); e.target.reset(); toast('Usuário criado.');
+  } catch (ex) { err.textContent = 'Não foi possível criar. Só quem edita esta página consegue criar usuários.'; }
+  finally { btn.disabled = false; }
+});
+uv.addEventListener('click', async e => {
+  const a = e.target.closest('[data-uact]'); if (!a) return;
+  switch (a.dataset.uact) {
+    case 'bulk': {
+      const names = $('#bulk-names').value.split('\n').map(s => s.trim()).filter(Boolean);
+      if (!names.length) { toast('Escreva pelo menos um nome.'); return; }
+      const taken = new Set(cache.users.map(u => u.username)), list = [];
+      a.disabled = true; toast('Criando alunos…');
+      try {
+        for (const name of names) {
+          const username = usernameFor(name, taken), password = genPw();
+          await Store.set('users/' + username, await makeUser({ name, username, password, role: 'student' }));
+          list.push({ name, username, password });
+        }
+        ui.creds = { title: `${plural(list.length, 'aluno criado', 'alunos criados')}`, list };
+        renderCreds(); $('#bulk-names').value = ''; toast('Alunos criados.');
+      } catch (ex) { if (list.length) { ui.creds = { title: 'Criação interrompida. Estes foram criados:', list }; renderCreds(); } toast('Não foi possível criar todos os alunos.'); }
+      finally { a.disabled = false; }
+      break;
+    }
+    case 'reset': {
+      const rec = cache.users.find(x => x.username === a.dataset.u); if (!rec) return;
+      const pw = genPw(), salt = newSalt();
+      try {
+        await Store.set('users/' + rec.username, { ...rec, salt, hash: await hashPw(pw, salt), pwResetAt: Date.now() });
+        ui.creds = { title: 'Nova senha gerada', list: [{ name: rec.name, username: rec.username, password: pw }] }; renderCreds(); toast('Senha redefinida.');
+      } catch (ex) { toast('Não foi possível redefinir a senha.'); }
+      break;
+    }
+    case 'del': armed(a, 'Confirmar?', async () => {
+      try { await Store.del('users/' + a.dataset.u); toast('Usuário excluído.'); } catch (ex) { toast('Não foi possível excluir.'); }
+    }); break;
+    case 'copy-creds': copyText('Nome\tUsuário\tSenha\n' + ui.creds.list.map(c => `${c.name}\t${c.username}\t${c.password}`).join('\n')); break;
+    case 'hide-creds': ui.creds = null; renderCreds(); break;
+  }
+});
+
+/* =====================================================================
+   Sala ao vivo (estilo Kahoot)
+   Documentos: rooms/{código}                       estado da sala (só o professor escreve)
+               rooms/{código}/players/{usuário}      nome e respostas (só o aluno escreve)
+               rooms/{código}/results/all            pontos por pergunta (só o professor escreve)
+   A resposta certa só é publicada quando o professor revela a pergunta.
+   ===================================================================== */
+const Live = { mode: null, code: null, room: null, players: [], results: { roster: [], qs: [] }, prepared: [], unsubs: [], timer: null, allTimer: null, qStartMs: 0, seenQ: -2, answers: {}, revealing: false };
+const OC = ['var(--coral)', 'var(--sky)', 'var(--yellow)', 'var(--mint)'];
+const LT = ['A', 'B', 'C', 'D'];
+const fmtCode = c => String(c).replace(/(\d{3})(\d{3})/, '$1 $2');
+
+function liveReset() {
+  Live.unsubs.forEach(u => { try { u(); } catch (e) {} });
+  clearInterval(Live.timer); clearTimeout(Live.allTimer);
+  Object.assign(Live, { mode: null, code: null, room: null, players: [], results: { roster: [], qs: [] }, prepared: [], unsubs: [], timer: null, allTimer: null, qStartMs: 0, seenQ: -2, answers: {}, revealing: false });
+}
+function ranking(res) {
+  return res.roster.map((p, i) => ({ id: p.id, name: p.name, score: res.qs.reduce((s, q) => s + ((q.pts && q.pts[i]) || 0), 0) }))
+    .sort((a, b) => b.score - a.score || String(a.name).localeCompare(String(b.name), 'pt-BR'));
+}
+function enterLive() {
+  if (!Live.mode && me.role === 'teacher') loadHistory();
+  renderLive();
+}
+async function loadHistory() {
+  try {
+    const l = (await Store.list('history')).map(x => x.data).filter(h => me.master || h.hostId === me.username);
+    ui.history = l.sort((a, b) => b.date - a.date).slice(0, 6);
+    if (cur === 'live' && !Live.mode) renderLive();
+  } catch (e) {}
+}
+async function destroyRoom(code) {
+  try {
+    const pl = await Store.list(`rooms/${code}/players`);
+    for (const p of pl) await Store.del(`rooms/${code}/players/${p.id}`);
+    await Store.del(`rooms/${code}/results/all`);
+    await Store.del('rooms/' + code);
+  } catch (e) {}
+}
+async function checkResume() {
+  ui.resume = null;
+  try {
+    const saved = JSON.parse(lsGet('nivel-host') || 'null');
+    if (saved) {
+      const room = await Store.get('rooms/' + saved.code);
+      if (room && room.hostId === me.username) ui.resume = saved.code; else lsDel('nivel-host');
+    }
+    const rooms = await Store.list('rooms');
+    for (const r of rooms) {
+      const d = r.data;
+      if (d && d.hostId === me.username && r.id !== ui.resume && Date.now() - (d.createdAt || 0) > 12 * 3600 * 1000) destroyRoom(r.id);
+    }
+  } catch (e) {}
+  if (cur === 'live' && !Live.mode) renderLive();
+}
+
+function renderLive() {
+  if (cur !== 'live') return;
+  const root = $('#live-root');
+  if (me.role === 'student') { Live.mode === 'player' ? renderPlayer(root) : renderJoin(root); }
+  else { Live.mode === 'host' ? renderHost(root) : renderHostSetup(root); }
+  updateTimer();
+}
+
+/* ---------- professor: criar sala ---------- */
+function renderHostSetup(root) {
+  const banks = cache.banks.filter(b => b.questions.length >= 1);
+  if (!ui.liveBank || !banks.find(b => b.id === ui.liveBank)) ui.liveBank = (activeBank() && banks.find(b => b.id === activeBank().id) ? activeBank().id : (banks[0] || {}).id) || null;
+  root.innerHTML = `<div class="panel">
+    <h2>Criar sala ao vivo</h2>
+    <p class="note" style="margin-top:.4rem">Toda a turma responde ao mesmo tempo, no celular ou no computador. Quem acerta mais rápido ganha mais pontos. Mantenha esta página aberta durante a dinâmica.</p>
+    ${ui.resume ? `<div class="resume"><span>Você tem uma sala aberta (código <b>${fmtCode(ui.resume)}</b>).</span><button class="btn btn-sm btn-primary" data-live="resume">Retomar sala</button></div>` : ''}
+    <div class="grid-fields">
+      <label class="fld">Questionário<select class="inp" id="lv-bank">${banks.map(b => `<option value="${b.id}" ${b.id === ui.liveBank ? 'selected' : ''}>${esc(b.name)} (${lv(b.level).label}, ${plural(b.questions.length, 'pergunta', 'perguntas')})</option>`).join('') || '<option value="">Nenhum questionário com perguntas</option>'}</select></label>
+      <label class="fld">Tempo por pergunta<select class="inp" id="lv-time">${['10', '20', '30', '45', '60'].map(t => `<option value="${t}" ${t === ui.liveTime ? 'selected' : ''}>${t} segundos</option>`).join('')}</select></label>
+      <label class="fld">Quantidade de perguntas<select class="inp" id="lv-n">${['5', '10', '15', 'all'].map(n => `<option value="${n}" ${n === ui.liveN ? 'selected' : ''}>${n === 'all' ? 'Todas' : n}</option>`).join('')}</select></label>
+    </div>
+    <button class="btn btn-primary" data-live="create" ${banks.length ? '' : 'disabled'}>Criar sala</button>
+  </div>
+  ${ui.history.length ? `<div class="panel" style="margin-top:1.4rem"><h3>Últimas salas</h3><div class="hist">${ui.history.map(h => `<div><strong>${esc(h.bankName)}</strong> <small>${new Date(h.date).toLocaleString('pt-BR')}, ${plural(h.players, 'aluno', 'alunos')}</small>
+    ${h.ranking.slice(0, 3).map((r, i) => `<small>${i + 1}º ${esc(r.name)}: ${r.score} pontos</small>`).join('')}</div>`).join('')}</div></div>` : ''}`;
+}
+async function createRoom() {
+  const bank = cache.banks.find(b => b.id === ui.liveBank);
+  if (!bank || !bank.questions.length) { toast('Escolha um questionário com perguntas.'); return; }
+  const limit = +ui.liveTime || 20;
+  const n = ui.liveN === 'all' ? bank.questions.length : Math.min(+ui.liveN || 10, bank.questions.length);
+  const prepared = shuffle(bank.questions).slice(0, n).map(q => {
+    const o = shuffle(q.options.map((t, i) => ({ t, i })));
+    return { text: q.text, options: o.map(x => x.t), correct: o.findIndex(x => x.i === q.correct), explanation: q.explanation || '' };
+  });
+  try {
+    let code = null;
+    for (let i = 0; i < 8 && !code; i++) { const c = String(100000 + rand(900000)); if (!(await Store.get('rooms/' + c))) code = c; }
+    if (!code) throw new Error('code');
+    const room = { code, hostId: me.username, hostName: me.name, bankName: bank.name, theme: bank.theme || '', level: bank.level, status: 'lobby', qIndex: -1, total: prepared.length, timeLimit: limit, current: null, createdAt: Date.now() };
+    await Store.set('rooms/' + code, room);
+    await Store.set(`rooms/${code}/results/all`, { roster: [], qs: [] });
+    lsSet('nivel-host', JSON.stringify({ code, prepared }));
+    startHost(code, room, prepared, { roster: [], qs: [] });
+  } catch (e) { toast('Não foi possível criar a sala. Tente de novo.'); }
+}
+async function resumeRoom() {
+  try {
+    const saved = JSON.parse(lsGet('nivel-host') || 'null');
+    const room = saved && await Store.get('rooms/' + saved.code);
+    if (!room) { toast('Essa sala não existe mais.'); lsDel('nivel-host'); ui.resume = null; renderLive(); return; }
+    const results = (await Store.get(`rooms/${saved.code}/results/all`)) || { roster: [], qs: [] };
+    startHost(saved.code, room, saved.prepared, results);
+    if (room.status === 'question') { Live.qStartMs = Date.now(); startHostTimer(); }
+  } catch (e) { toast('Não consegui retomar a sala.'); }
+}
+function startHost(code, room, prepared, results) {
+  liveReset();
+  Object.assign(Live, { mode: 'host', code, room, prepared, results });
+  ui.resume = null;
+  Live.unsubs.push(Store.watchCol(`rooms/${code}/players`, list => { Live.players = list.map(x => x.data); onHostPlayers(); }));
+  renderLive();
+}
+function onHostPlayers() {
+  if (Live.mode !== 'host' || cur !== 'live') return;
+  const r = Live.room;
+  if (r.status === 'lobby') {
+    const box = $('#lv-players'), cnt = $('#lv-count');
+    if (box) box.innerHTML = Live.players.map(p => `<span class="pl-chip">${esc(p.name)}</span>`).join('') || '<span class="note">Aguardando alunos…</span>';
+    if (cnt) cnt.textContent = `Iniciar com ${plural(Live.players.length, 'aluno', 'alunos')}`;
+  } else if (r.status === 'question') {
+    const n = Live.players.filter(p => p['a' + r.qIndex]).length, el = $('#lv-answered');
+    if (el) el.textContent = `${n} de ${Live.players.length} responderam`;
+    if (Live.players.length && n >= Live.players.length && !Live.allTimer && !Live.revealing) Live.allTimer = setTimeout(hostReveal, 700);
+  }
+}
+async function hostQuestion(i) {
+  const p = Live.prepared[i]; clearTimeout(Live.allTimer); Live.allTimer = null; Live.revealing = false;
+  Live.room = { ...Live.room, status: 'question', qIndex: i, current: { index: i, text: p.text, options: p.options } };
+  Live.qStartMs = Date.now();
+  renderLive(); startHostTimer();
+  try { await Store.set('rooms/' + Live.code, Live.room); } catch (e) { toast('Falha ao enviar a pergunta. Verifique a conexão.'); }
+}
+function startHostTimer() {
+  clearInterval(Live.timer);
+  Live.timer = setInterval(() => {
+    updateTimer();
+    if (Live.room.status === 'question' && Date.now() - Live.qStartMs >= Live.room.timeLimit * 1000 + 1200) hostReveal();
+  }, 250);
+}
+async function hostReveal() {
+  if (Live.mode !== 'host' || Live.revealing || Live.room.status !== 'question') return;
+  Live.revealing = true; clearInterval(Live.timer); clearTimeout(Live.allTimer); Live.allTimer = null;
+  const i = Live.room.qIndex, p = Live.prepared[i], lim = Live.room.timeLimit * 1000;
+  Live.players.forEach(pl => { if (!Live.results.roster.some(r => r.id === pl.id)) Live.results.roster.push({ id: pl.id, name: pl.name }); });
+  const counts = p.options.map(() => 0), pts = Live.results.roster.map(() => 0);
+  Live.results.roster.forEach((r, idx) => {
+    const pl = Live.players.find(x => x.id === r.id), a = pl && pl['a' + i];
+    if (!a || typeof a.choice !== 'number' || a.choice < 0 || a.choice >= counts.length) return;
+    counts[a.choice]++;
+    if (a.choice === p.correct) { const ms = Math.min(lim, Math.max(0, +a.ms || lim)); pts[idx] = Math.round(1000 * (1 - (ms / lim) / 2)); }
+  });
+  Live.results.qs[i] = { correct: p.correct, counts, pts, explanation: p.explanation };
+  Live.room = { ...Live.room, status: 'reveal' };
+  renderLive();
+  try {
+    await Store.set(`rooms/${Live.code}/results/all`, Live.results);
+    await Store.set('rooms/' + Live.code, Live.room);
+  } catch (e) { toast('Falha ao enviar o resultado. Verifique a conexão.'); }
+}
+async function hostFinish() {
+  clearInterval(Live.timer);
+  Live.room = { ...Live.room, status: 'finished' }; renderLive();
+  const rk = ranking(Live.results);
+  try {
+    await Store.set('rooms/' + Live.code, Live.room);
+    await Store.set('history/' + Live.code + '_' + Date.now(), { code: Live.code, hostId: me.username, hostName: me.name, bankName: Live.room.bankName, level: Live.room.level, total: Live.room.total, date: Date.now(), players: rk.length, ranking: rk.slice(0, 40).map(x => ({ name: x.name, score: x.score })) });
+  } catch (e) {}
+}
+async function closeRoom() {
+  const code = Live.code; toast('Encerrando a sala…');
+  await destroyRoom(code); lsDel('nivel-host'); liveReset(); ui.resume = null; loadHistory(); renderLive(); toast('Sala encerrada.');
+}
+
+/* ---------- telas do professor ---------- */
+function podiumHtml(rk) {
+  const top = rk.slice(0, 3); if (!top.length) return '';
+  const spec = [{ i: 1, h: '120px', c: 'var(--lav)' }, { i: 0, h: '170px', c: 'var(--yellow)' }, { i: 2, h: '90px', c: 'var(--coral)' }];
+  return `<div class="podium">${spec.filter(s => top[s.i]).map(s => `<div class="pod"><div>${esc(top[s.i].name)}<small>${top[s.i].score} pontos</small></div><div class="blk" style="--h:${s.h};--c:${s.c}">${s.i + 1}º</div></div>`).join('')}</div>`;
+}
+function rankListHtml(rk, limit, meId) {
+  return `<ol class="rank">${rk.slice(0, limit).map((r, i) => `<li class="${r.id === meId ? 'me' : ''}"><span>${i + 1}º ${esc(r.name)}</span><span>${r.score}</span></li>`).join('')}</ol>`;
+}
+function renderHost(root) {
+  const r = Live.room;
+  if (r.status === 'lobby') {
+    root.innerHTML = `<div class="live-stage"><div class="live-hero">
+      <p style="margin:0;font-weight:600">${esc(r.bankName)}, ${plural(r.total, 'pergunta', 'perguntas')} de ${r.timeLimit} segundos</p>
+      <div class="room-code" aria-label="Código da sala ${r.code.split('').join(' ')}">${fmtCode(r.code)}</div>
+      <p style="margin:0">Alunos: entrem no Nível, abram <strong>Sala ao vivo</strong> e digitem o código.</p>
+      <div class="pl-chips" id="lv-players"></div>
+      <div class="row" style="justify-content:center"><button class="btn btn-primary" data-live="start" id="lv-count">Iniciar</button><button class="btn" data-live="close">Cancelar sala</button></div>
+    </div></div>`;
+    onHostPlayers();
+  } else if (r.status === 'question') {
+    const c = r.current;
+    root.innerHTML = `<div class="live-stage">
+      <div class="q-top"><span class="q-tag">Pergunta ${r.qIndex + 1} de ${r.total}</span><span class="q-time"><span id="lv-sec">${r.timeLimit}</span> s</span></div>
+      <div class="q-bar"><i id="lv-bar"></i></div>
+      <h2 class="live-q">${esc(c.text)}</h2>
+      <div class="opt-grid">${c.options.map((t, i) => `<div class="opt-blk" style="--c:${OC[i]}"><b>${LT[i]}</b><span>${esc(t)}</span></div>`).join('')}</div>
+      <div class="row live-foot"><span class="live-count" id="lv-answered"></span><button class="btn" data-live="reveal">Mostrar resposta agora</button></div>
+    </div>`;
+    onHostPlayers();
+  } else if (r.status === 'reveal') {
+    const i = r.qIndex, q = Live.results.qs[i], p = Live.prepared[i], total = q.counts.reduce((a, b) => a + b, 0), rk = ranking(Live.results);
+    const last = i + 1 >= r.total;
+    root.innerHTML = `<div class="live-stage">
+      <div class="q-top"><span class="q-tag">Pergunta ${i + 1} de ${r.total}</span><span class="live-count">${plural(total, 'resposta', 'respostas')}</span></div>
+      <h2 class="live-q">${esc(p.text)}</h2>
+      ${p.options.map((t, k) => `<div class="dist ${k === q.correct ? 'right' : ''}" style="--c:${OC[k]};--w:${total ? Math.round(q.counts[k] / total * 100) : 0}%"><b>${LT[k]}</b><span>${esc(t)}${k === q.correct ? ' (correta)' : ''}</span><em>${q.counts[k]}</em></div>`).join('')}
+      ${p.explanation ? `<p class="note">${esc(p.explanation)}</p>` : ''}
+      <h3 class="t-h">Placar</h3>${rankListHtml(rk, 5)}
+      <div class="row live-foot"><span></span><button class="btn btn-primary" data-live="${last ? 'finish' : 'next'}">${last ? 'Ver pódio final' : 'Próxima pergunta'}</button></div>
+    </div>`;
+  } else {
+    const rk = ranking(Live.results);
+    root.innerHTML = `<div class="live-stage"><div class="live-hero"><h2 style="font-size:2.4rem">Fim da dinâmica!</h2>${podiumHtml(rk)}</div>
+      ${rk.length > 3 ? `<h3 class="t-h" style="margin-top:0">Classificação completa</h3>${rankListHtml(rk, 60)}` : ''}
+      <div class="row live-foot"><span class="note" style="margin:0">O resultado fica salvo em "Últimas salas".</span><button class="btn btn-primary" data-live="close">Encerrar sala</button></div>
+    </div>`;
+  }
+}
+
+/* ---------- aluno: entrar e jogar ---------- */
+function renderJoin(root) {
+  root.innerHTML = `<div class="panel" style="max-width:520px;margin:0 auto;text-align:center">
+    <h2>Entrar em uma sala</h2>
+    <p class="note" style="margin:.6rem 0 1.2rem">Digite o código de 6 números que o professor mostrou na tela.</p>
+    <input class="inp code-inp" id="join-code" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000" aria-label="Código da sala">
+    <div style="margin-top:1.2rem"><button class="btn btn-primary" data-live="join">Entrar na sala</button></div>
+  </div>`;
+}
+async function joinRoom(code, silent) {
+  code = String(code).replace(/\D/g, '');
+  if (code.length !== 6) { if (!silent) toast('O código tem 6 números.'); return; }
+  try {
+    const room = await Store.get('rooms/' + code);
+    if (!room || room.status === 'finished') { if (!silent) toast('Sala não encontrada. Confira o código com o professor.'); ssDel('nivel-join'); return; }
+    const pref = `rooms/${code}/players/${me.username}`;
+    let rec = await Store.get(pref);
+    if (!rec) { rec = { id: me.username, name: me.name, joinedAt: Date.now() }; await Store.set(pref, rec); }
+    liveReset();
+    Live.mode = 'player'; Live.code = code; Live.room = room;
+    Object.keys(rec).forEach(k => { if (/^a\d+$/.test(k)) Live.answers[+k.slice(1)] = rec[k].choice; });
+    ssSet('nivel-join', code);
+    Live.unsubs.push(Store.watchDoc('rooms/' + code, d => onRoomDoc(d)));
+    Live.unsubs.push(Store.watchDoc(`rooms/${code}/results/all`, d => { Live.results = d || { roster: [], qs: [] }; renderLive(); }));
+    renderLive();
+  } catch (e) { if (!silent) toast('Não foi possível entrar na sala. Tente de novo.'); }
+}
+function onRoomDoc(d) {
+  if (Live.mode !== 'player') return;
+  if (!d) { if (!Live.room || Live.room.status !== 'finished') Live.room = null; renderLive(); return; }
+  if (d.status === 'question' && d.qIndex !== Live.seenQ) {
+    Live.seenQ = d.qIndex; Live.qStartMs = Date.now();
+    clearInterval(Live.timer); Live.timer = setInterval(updateTimer, 250);
+  }
+  if (d.status !== 'question') clearInterval(Live.timer);
+  Live.room = d; renderLive();
+}
+function renderPlayer(root) {
+  const r = Live.room;
+  const leave = '<div class="row" style="justify-content:center;margin-top:1.2rem"><button class="btn btn-sm" data-live="leave">Sair da sala</button></div>';
+  if (!r) { root.innerHTML = `<div class="live-stage"><div class="result-big"><h2>A sala foi encerrada</h2><p class="note">O professor encerrou a sala.</p></div>${leave}</div>`; return; }
+  if (r.status === 'lobby') {
+    root.innerHTML = `<div class="live-stage"><div class="result-big"><h2>Você está na sala!</h2><p class="lead" style="margin:.6rem auto">Aguarde o professor iniciar. ${esc(r.bankName)}, ${plural(r.total, 'pergunta', 'perguntas')}.</p></div>${leave}</div>`;
+  } else if (r.status === 'question') {
+    const c = r.current, i = r.qIndex, mine = Live.answers[i];
+    root.innerHTML = `<div class="live-stage">
+      <div class="q-top"><span class="q-tag">Pergunta ${i + 1} de ${r.total}</span><span class="q-time"><span id="lv-sec">${r.timeLimit}</span> s</span></div>
+      <div class="q-bar"><i id="lv-bar"></i></div>
+      <h2 class="live-q">${esc(c.text)}</h2>
+      <div class="opt-grid">${c.options.map((t, k) => `<button class="opt-blk ${mine === k ? 'picked' : ''}" style="--c:${OC[k]}" data-ans="${k}" ${mine !== undefined ? 'disabled' : ''}><b>${LT[k]}</b><span>${esc(t)}</span></button>`).join('')}</div>
+      <p class="live-count" id="lv-status" role="status" style="margin:1.2rem 0 0">${mine !== undefined ? 'Resposta enviada. Aguarde o resultado.' : ''}</p></div>`;
+  } else if (r.status === 'reveal') {
+    const i = r.qIndex, q = Live.results.qs[i];
+    if (!q) { root.innerHTML = `<div class="live-stage"><div class="result-big"><h2>Calculando…</h2></div></div>`; return; }
+    const idx = Live.results.roster.findIndex(p => p.id === me.username), pts = idx >= 0 ? (q.pts[idx] || 0) : 0;
+    const mine = Live.answers[i], ok = mine !== undefined && mine === q.correct;
+    const rk = ranking(Live.results), pos = rk.findIndex(x => x.id === me.username) + 1;
+    root.innerHTML = `<div class="live-stage ${ok ? 'result-ok' : 'result-bad'}"><div class="result-big">
+      <h2>${mine === undefined ? 'Sem resposta' : ok ? 'Acertou!' : 'Não foi dessa vez'}</h2>
+      <div class="pts">+${pts}</div>
+      ${ok ? '' : `<p style="margin:0">Resposta certa: <strong>${LT[q.correct]}. ${esc(r.current.options[q.correct])}</strong></p>`}
+      ${q.explanation ? `<p class="note">${esc(q.explanation)}</p>` : ''}
+      ${pos ? `<p style="font-weight:700;margin:1rem 0 0">Você está em ${pos}º lugar com ${rk[pos - 1].score} pontos</p>` : ''}
+      <p class="note">Aguarde a próxima pergunta.</p></div>${leave}</div>`;
+  } else {
+    const rk = ranking(Live.results), pos = rk.findIndex(x => x.id === me.username) + 1;
+    root.innerHTML = `<div class="live-stage"><div class="live-hero"><h2 style="font-size:2.4rem">Fim da dinâmica!</h2>
+      ${pos ? `<p class="lead" style="margin:.6rem auto"><strong>Você ficou em ${pos}º lugar com ${rk[pos - 1].score} pontos.</strong></p>` : ''}
+      ${podiumHtml(rk)}</div>${leave}</div>`;
+  }
+}
+async function submitAnswer(k) {
+  const r = Live.room; if (!r || r.status !== 'question') return;
+  const i = r.qIndex; if (Live.answers[i] !== undefined) return;
+  const ms = Date.now() - Live.qStartMs;
+  if (ms > r.timeLimit * 1000 + 300) return;
+  Live.answers[i] = k; renderLive();
+  try { await Store.update(`rooms/${Live.code}/players/${me.username}`, { ['a' + i]: { choice: k, ms } }); }
+  catch (e) { delete Live.answers[i]; renderLive(); toast('Não consegui enviar sua resposta. Toque de novo.'); }
+}
+function leaveRoom() { ssDel('nivel-join'); liveReset(); renderLive(); }
+
+/* ---------- cronômetro da pergunta ---------- */
+function updateTimer() {
+  const r = Live.room, bar = $('#lv-bar'), sec = $('#lv-sec');
+  if (!r || r.status !== 'question' || !bar) return;
+  const total = r.timeLimit * 1000, left = total - (Date.now() - Live.qStartMs);
+  bar.style.width = Math.max(0, left / total * 100) + '%';
+  bar.classList.toggle('low', left / total < .3);
+  if (sec) sec.textContent = Math.max(0, Math.ceil(left / 1000));
+  if (left <= 0 && Live.mode === 'player') {
+    $$('#live-root [data-ans]').forEach(b => { b.disabled = true; });
+    const s = $('#lv-status'); if (s && Live.answers[r.qIndex] === undefined) s.textContent = 'Tempo esgotado. Aguarde o resultado.';
+  }
+}
+
+/* ---------- eventos da sala ---------- */
+const lvw = $('#view-live');
+lvw.addEventListener('click', e => {
+  const a = e.target.closest('[data-ans]'); if (a) { submitAnswer(+a.dataset.ans); return; }
+  const b = e.target.closest('[data-live]'); if (!b) return;
+  switch (b.dataset.live) {
+    case 'create': createRoom(); break;
+    case 'resume': resumeRoom(); break;
+    case 'start': hostQuestion(0); break;
+    case 'next': hostQuestion(Live.room.qIndex + 1); break;
+    case 'reveal': hostReveal(); break;
+    case 'finish': hostFinish(); break;
+    case 'close': armed(b, 'Clique de novo para encerrar', closeRoom); break;
+    case 'join': joinRoom($('#join-code').value); break;
+    case 'leave': leaveRoom(); break;
+  }
+});
+lvw.addEventListener('change', e => {
+  if (e.target.id === 'lv-bank') ui.liveBank = e.target.value;
+  if (e.target.id === 'lv-time') ui.liveTime = e.target.value;
+  if (e.target.id === 'lv-n') ui.liveN = e.target.value;
+});
+lvw.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'join-code') joinRoom(e.target.value); });
+lvw.addEventListener('input', e => { if (e.target.id === 'join-code') e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
+
+/* =====================================================================
+   Início
+   ===================================================================== */
+(async function boot() {
+  try {
+    await Store.init();
+    const meta = await Store.get('meta/app');
+    const sess = await restoreSession();
+    if (sess) { await startApp(sess); return; }
+    if (meta) bootState.mode = 'login';
+    else {
+      let editor = Store.mode === 'local';
+      if (!editor) { try { const u = await window.claude.use('user'); editor = !!(u && await u.canEdit()); } catch (e) { editor = false; } }
+      bootState.mode = editor ? 'setup' : 'blocked';
+    }
+  } catch (e) { bootState.mode = 'error'; }
+  go('login');
+})();
+})();
+</script>
+</body>
+</html>

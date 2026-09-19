@@ -1677,14 +1677,17 @@ lvw.addEventListener('input', e => { if (e.target.id === 'join-code') e.target.v
     await Store.init();
     const meta = await Store.get('meta/app');
     const sess = await restoreSession();
-    if (sess) { await startApp(sess); return; }
-    if (meta) bootState.mode = 'login';
-    else {
-      let editor = Store.mode === 'local';
-      if (!editor) { try { const u = await window.claude.use('user'); editor = !!(u && await u.canEdit()); } catch (e) { editor = false; } }
-      bootState.mode = editor ? 'setup' : 'blocked';
+    if (sess) { 
+      await startApp(sess); 
+      return; 
     }
-  } catch (e) { bootState.mode = 'error'; }
+    // Se a aplicação já tiver configuração no Firebase, vai para o login normal.
+    // Caso contrário, abre diretamente o ecrã de setup para criar a conta master.
+    bootState.mode = meta ? 'login' : 'setup';
+  } catch (e) { 
+    console.error('Erro na inicialização:', e);
+    bootState.mode = 'error'; 
+  }
   go('login');
 })();
 })();
